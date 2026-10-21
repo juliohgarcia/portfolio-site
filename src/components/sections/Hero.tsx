@@ -5,6 +5,7 @@ import { DURATION, EASE, MOTION_OK, SCRUB } from "@/lib/motion";
 import { useContent, useLocale } from "@/i18n/locale-context";
 import { useIntroDone } from "@/hooks/useIntro";
 import { RevealText } from "@/components/ui/RevealText";
+import { HeroField } from "@/components/ui/HeroField";
 
 /**
  * Hero: a tipografia display e o elemento principal da pagina.
@@ -95,6 +96,8 @@ export function Hero() {
       // realmente visivel.
       className="relative flex min-h-dvh flex-col justify-between pt-28 pb-10 md:pt-32"
     >
+      <HeroField />
+
       <div className="container-page">
         <p className="hero-eyebrow text-label text-paper-dim mb-8 md:mb-12">{hero.eyebrow}</p>
 

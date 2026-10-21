@@ -5,6 +5,7 @@ import { MOTION_OK, SCRUB } from "@/lib/motion";
 import { useContent, useLocale } from "@/i18n/locale-context";
 import { RevealText } from "@/components/ui/RevealText";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { TechIcon } from "@/components/ui/TechIcon";
 
 /**
  * Skills agrupadas por natureza.
@@ -72,7 +73,13 @@ export function Skills() {
             <h3 className="text-label text-lime border-ink-line border-b pb-4">{group.name}</h3>
             <ul className="mt-5 space-y-3">
               {group.items.map((item) => (
-                <li key={item} className="text-paper-dim">
+                <li
+                  key={item}
+                  // `group/skill` nomeia o grupo para o icone reagir ao hover
+                  // do item inteiro, nao so ao hover de si mesmo.
+                  className="group/skill text-paper-dim hover:text-paper flex items-center gap-3 transition-colors duration-200"
+                >
+                  <TechIcon label={item} />
                   {item}
                 </li>
               ))}
