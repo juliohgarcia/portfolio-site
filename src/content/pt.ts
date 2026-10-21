@@ -31,7 +31,7 @@ export const pt = {
     eyebrow: "Júlio Garcia · Front-end",
     titleLines: ["Suporte", "vira", "código"],
     subtitle:
-      "Passei {{ANOS_SUPORTE}} anos resolvendo os problemas de quem usa o software. Agora eu construo o software.",
+      "Passei 11 meses resolvendo os problemas de quem usa o software. Agora eu construo o software.",
     scrollHint: "role",
   },
 
@@ -40,13 +40,13 @@ export const pt = {
     title: "Quem depura em produção aprende rápido",
     paragraphs: [
       "Comecei no suporte técnico, no ponto exato em que o software encontra a vida real. Meu trabalho era receber o problema já acontecendo: o log confuso, a pessoa sem paciência do outro lado, o bug que só aparece em uma máquina específica.",
-      "Aprendi ali o que curso nenhum ensina bem — reproduzir um erro a partir de uma descrição vaga, ler stack trace sem entrar em pânico, isolar variáveis até sobrar uma causa só. E aprendi a traduzir: do que a pessoa relata para o que o sistema de fato fez.",
-      "Hoje estou do outro lado, escrevendo o código. Trouxe comigo o hábito de perguntar “o que acontece quando isso falha?” antes de perguntar “como faço isso funcionar?”. Para quem constrói interface, essa ordem muda o resultado.",
+      "Aprendi ali o que curso nenhum ensina bem — reproduzir um erro a partir de uma descrição vaga, isolar os problemas até sobrar uma causa só. E aprendi a traduzir: do que a pessoa relata para o que o sistema de fato fez.",
+      "Em paralelo estou do outro lado, escrevendo o código. Trouxe comigo o hábito de perguntar “o que acontece quando isso falha?” antes de perguntar “como faço isso funcionar?”. Para quem constrói interface, essa ordem muda o resultado.",
     ],
     highlights: [
-      { value: "{{ANOS_SUPORTE}}+", label: "anos depurando sistemas em produção" },
-      { value: "React", label: "foco atual de estudo" },
-      { value: "{{CIDADE}}", label: "disponível para remoto" },
+      { value: "11+", label: "meses depurando sistemas em produção" },
+      { value: "PHP & Laravel", label: "foco atual de estudo" },
+      { value: "Erechim - RS", label: "disponível para remoto" },
     ],
   },
 
@@ -57,15 +57,15 @@ export const pt = {
       {
         period: "{{PERIODO_ATUAL}}",
         role: "Analista de Suporte Técnico",
-        company: "{{EMPRESA_ATUAL}}",
+        company: "Autentique",
         description:
           "Atendimento de incidentes de ponta a ponta: reprodução do problema, análise de logs, escalonamento para engenharia e comunicação com quem reportou. Virei a ponte entre o relato do usuário e a causa técnica.",
         tags: ["SQL", "Análise de logs", "APIs REST", "Documentação"],
       },
       {
         period: "{{PERIODO_ANTERIOR}}",
-        role: "{{CARGO_ANTERIOR}}",
-        company: "{{EMPRESA_ANTERIOR}}",
+        role: "Analista de Suporte N1",
+        company: "Astrus Digital",
         description:
           "{{DESCRICAO_ANTERIOR — o que você fazia e o que isso te ensinou que ainda usa hoje}}",
         tags: ["{{TAG}}", "{{TAG}}"],
