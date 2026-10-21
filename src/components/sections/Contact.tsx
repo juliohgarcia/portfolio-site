@@ -68,9 +68,14 @@ export function Contact() {
                   ) : (
                     // Sem URL preenchida, mostramos o rotulo sem link —
                     // nunca um <a> apontando para "{{GITHUB_URL}}".
+                    // Contraste cheio (5.53:1): o que diferencia do link ativo
+                    // e a ausencia de sublinhado e de hover, nao texto apagado.
+                    // text-paper-dim/70 daria 3.25:1 e reprovaria no AA em 16px.
                     <p className="flex items-baseline justify-between gap-4">
-                      <span className="text-expanded text-paper-dim/70">{link.label}</span>
-                      <span className="text-paper-dim/50 text-sm">—</span>
+                      <span className="text-expanded text-paper-dim">{link.label}</span>
+                      <span aria-hidden="true" className="text-paper-dim/50 text-sm">
+                        —
+                      </span>
                     </p>
                   )}
                 </li>

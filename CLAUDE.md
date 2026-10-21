@@ -57,24 +57,26 @@ npm run typecheck  # so os tipos, sem build
 npm run format     # prettier --write
 ```
 
-Deploy: **Vercel**, automático no push para `main`. Build command `npm run build`,
-output `dist`.
+Deploy: **Vercel**, automático no push para `main`. Configuração fixada em
+`vercel.json`; passo a passo e checklist em [`DEPLOY.md`](./DEPLOY.md).
 
 ## 4. Estrutura
 
 ```
 src/
-├── main.tsx            entrypoint: providers + App
-├── App.tsx             composicao das secoes — sem logica
-├── styles/index.css    tokens @theme, @font-face, base, utilities
-├── content/            UNICA fonte de texto do site (types.ts + pt.ts + en.ts)
-├── i18n/               LocaleProvider + useContent
-├── lib/gsap.ts         UNICO registerPlugin do projeto
-├── lib/motion.ts       DURATION, EASE, MOTION_OK/MOTION_REDUCED
-├── hooks/              useReducedMotion, useLenis, useRevealText, useIsTouch...
-├── components/layout/  SmoothScroll, Header, LocaleToggle, Footer
-├── components/ui/      Preloader, Cursor, Marquee, RevealText, MagneticLink
-└── components/sections/ Hero, About, Experience, Projects, Skills, Contact
+├── main.tsx              entrypoint
+├── App.tsx               Shell (decisoes de a11y/device) + composicao das secoes
+├── styles/index.css      tokens @theme, @font-face, base, @utility
+├── content/              UNICA fonte de texto (types.ts = contrato, pt.ts, en.ts)
+│   └── placeholders.ts   isPlaceholder/resolved — campos {{...}} nao viram link
+├── i18n/                 LocaleProvider, locale-context (useLocale/useContent), DocumentMeta
+├── lib/gsap.ts           UNICO registerPlugin do projeto
+├── lib/motion.ts         DURATION, EASE, MOTION_OK / MOTION_REDUCED / MOTION_OK_DESKTOP
+├── lib/email.ts          remonta o e-mail em runtime
+├── hooks/                useReducedMotion, useIsTouch, useSmoothScroll, useParallax, useIntro
+├── components/layout/    SmoothScroll, Header, LocaleToggle, Footer, LazySection
+├── components/ui/        Preloader, Cursor, Marquee, RevealText, MagneticLink, SectionLabel
+└── components/sections/  Hero, About, Experience, Projects, ProjectCard, Skills, Contact
 ```
 
 Texto do site **nunca** fica hardcoded em componente — vai para `src/content/`,
@@ -126,6 +128,11 @@ em `SmoothScroll.tsx`, com `lagSmoothing(0)`. Nunca crie um segundo
 `requestAnimationFrame` — dois loops disputando o scroll é o que faz parallax
 tremer.
 
+**Code splitting mexe com ScrollTrigger.** Toda seção lazy entra por
+`LazySection`, que reserva altura e chama `ScrollTrigger.refresh()` quando o
+chunk monta. Sem isso os triggers das seções acima mantêm as medidas da altura
+antiga e disparam no lugar errado — invisível em dev, óbvio em 3G.
+
 **SplitText e o toggle de idioma.** Trocar PT↔EN muda o texto e invalida os spans
 do SplitText. Componentes de texto animado levam `key={locale}` para remontar
 limpo, e `split.revert()` no cleanup.
@@ -140,9 +147,14 @@ limpo, e `split.revert()` no cleanup.
    quando o JS falha.
 3. **Mobile-first.** O estilo base é o do celular; `md:` e `lg:` só ampliam.
    Nunca `lg:`-primeiro com override para baixo. Alvos de toque ≥ 44px.
-4. **Orçamento de bundle: < 170 kB gzip de JS.** Confira no `npm run build`.
-   Seções abaixo da dobra entram por `React.lazy`.
+4. **Orçamento de bundle: < 170 kB gzip de JS.** Confira no `npm run build`
+   somando os chunks. Estado atual: ~135 kB. Seções abaixo da dobra entram
+   por `React.lazy` via `LazySection`.
 5. **Foco visível sempre.** Nunca `outline: none` sem substituto.
+6. **Contraste verificado, não estimado.** Valores medidos sobre `--color-ink`:
+   `paper` 17.7:1 · `lime` 17.5:1 · `paper-dim` 5.53:1 — todos passam AA.
+   Variantes com opacidade **não** passam: `paper-dim/70` dá 3.25:1, que só
+   é aceitável em texto ≥ 24px. Em texto corrido use o token cheio.
 
 ## 8. Fase 1 vs Fase 2
 

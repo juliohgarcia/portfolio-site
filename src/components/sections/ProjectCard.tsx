@@ -88,6 +88,9 @@ export function ProjectCard({ project, index, labels }: ProjectCardProps) {
               {isDraft ? (
                 // Placeholder visivelmente marcado: melhor um "em breve"
                 // honesto do que um nome falso que o Julio pode esquecer.
+                // 3.25:1 de contraste — reprovaria para texto de 16px, mas
+                // aqui e text-display (bem acima de 24px), faixa em que o AA
+                // exige 3:1. Nao reutilize esta opacidade em texto corrido.
                 <span className="text-paper-dim/70">{project.name}</span>
               ) : (
                 project.name
