@@ -1,0 +1,134 @@
+/**
+ * CONTRATO DE CONTEUDO
+ *
+ * `pt.ts` e `en.ts` declaram `satisfies SiteContent`. Isso significa que, se
+ * voce adicionar um campo em um idioma e esquecer o outro, o `npm run build`
+ * falha — em vez de o site ir ao ar com um pedaco em branco.
+ *
+ * Todo texto visivel do site mora aqui. Nenhuma string de conteudo deve
+ * ficar escrita dentro de um componente: seria invisivel para o toggle
+ * PT/EN e quebraria a traducao silenciosamente.
+ */
+
+export type Locale = "pt" | "en";
+
+export const LOCALES: readonly Locale[] = ["pt", "en"] as const;
+
+/** Mapeia nosso codigo curto para o valor do atributo `lang` do HTML. */
+export const HTML_LANG: Record<Locale, string> = {
+  pt: "pt-BR",
+  en: "en",
+};
+
+export type NavItem = {
+  /** Texto exibido no menu. */
+  label: string;
+  /** Seletor do alvo, ex: "#about". Precisa casar com o id da secao. */
+  href: string;
+};
+
+export type Highlight = {
+  /** Numero ou palavra curta em destaque, ex: "3+". */
+  value: string;
+  label: string;
+};
+
+export type ExperienceItem = {
+  period: string;
+  role: string;
+  company: string;
+  description: string;
+  /** Tecnologias ou competencias, exibidas como chips. */
+  tags: readonly string[];
+};
+
+export type Project = {
+  name: string;
+  year: string;
+  description: string;
+  tags: readonly string[];
+  /** Links opcionais: o card se adapta a quantos existirem. */
+  repoUrl?: string;
+  liveUrl?: string;
+};
+
+export type SkillGroup = {
+  name: string;
+  items: readonly string[];
+};
+
+export type ContactLink = {
+  label: string;
+  /** Texto exibido, ex: "@juliohgarcia". */
+  handle: string;
+  href: string;
+};
+
+export type SiteContent = {
+  /** Usado em document.title e na meta description ao trocar de idioma. */
+  meta: {
+    title: string;
+    description: string;
+  };
+
+  nav: {
+    items: readonly NavItem[];
+    /** Rotulos acessiveis do botao de menu no mobile. */
+    openMenu: string;
+    closeMenu: string;
+  };
+
+  hero: {
+    eyebrow: string;
+    /** Cada string e uma linha da tipografia display. Mantenha-as curtas. */
+    titleLines: readonly string[];
+    subtitle: string;
+    scrollHint: string;
+  };
+
+  about: {
+    label: string;
+    title: string;
+    paragraphs: readonly string[];
+    highlights: readonly Highlight[];
+  };
+
+  experience: {
+    label: string;
+    title: string;
+    items: readonly ExperienceItem[];
+  };
+
+  projects: {
+    label: string;
+    title: string;
+    intro: string;
+    items: readonly Project[];
+    /** Rotulos dos links dos cards. */
+    viewRepo: string;
+    viewLive: string;
+  };
+
+  skills: {
+    label: string;
+    title: string;
+    intro: string;
+    groups: readonly SkillGroup[];
+  };
+
+  contact: {
+    label: string;
+    title: string;
+    invitation: string;
+    email: string;
+    links: readonly ContactLink[];
+  };
+
+  footer: {
+    note: string;
+    builtWith: string;
+  };
+
+  /** Texto que percorre a faixa horizontal entre secoes. */
+  marquee: readonly string[];
+};

@@ -3,6 +3,10 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { DURATION, EASE, MOTION_OK, MOTION_REDUCED } from "@/lib/motion";
 import { SmoothScroll, ScrollRefreshOnFontsReady } from "@/components/layout/SmoothScroll";
+import { LocaleToggle } from "@/components/layout/LocaleToggle";
+import { LocaleProvider } from "@/i18n/LocaleProvider";
+import { DocumentMeta } from "@/i18n/DocumentMeta";
+import { useContent, useLocale } from "@/i18n/locale-context";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useSmoothScroll } from "@/hooks/useSmoothScroll";
 
@@ -18,15 +22,23 @@ import { useSmoothScroll } from "@/hooks/useSmoothScroll";
  */
 function Diagnostics() {
   const reduced = useReducedMotion();
+  const { locale } = useLocale();
 
   return (
-    <div className="border-ink-line bg-ink-soft fixed top-4 right-4 z-50 rounded border p-3 font-mono text-xs">
+    <div className="border-ink-line bg-ink-soft fixed top-4 right-4 z-50 space-y-1 rounded border p-3 font-mono text-xs">
       <p>
         reduced-motion: <strong className="text-lime">{reduced ? "ON" : "off"}</strong>
       </p>
       <p>
         scroll: <strong className="text-lime">{reduced ? "nativo" : "lenis"}</strong>
       </p>
+      <p>
+        locale: <strong className="text-lime">{locale}</strong> · html lang:{" "}
+        <strong className="text-lime">{document.documentElement.lang}</strong>
+      </p>
+      <div className="border-ink-line mt-2 border-t pt-2">
+        <LocaleToggle />
+      </div>
     </div>
   );
 }
@@ -34,6 +46,7 @@ function Diagnostics() {
 function TestSections() {
   const root = useRef<HTMLDivElement>(null);
   const { scrollTo } = useSmoothScroll();
+  const { hero, about } = useContent();
 
   useGSAP(
     () => {
@@ -78,11 +91,15 @@ function TestSections() {
   return (
     <div ref={root}>
       <section className="container-page flex min-h-screen flex-col justify-center">
+        <p className="text-label text-paper-dim mb-6">{hero.eyebrow}</p>
         <h1 className="text-expanded text-hero">
-          Support
-          <br />
-          to Dev
+          {hero.titleLines.map((line) => (
+            <span key={line} className="block">
+              {line}
+            </span>
+          ))}
         </h1>
+        <p className="text-lead text-paper-dim mt-8 max-w-xl">{hero.subtitle}</p>
         <button
           type="button"
           onClick={() => scrollTo("#alvo", -80)}
@@ -100,9 +117,9 @@ function TestSections() {
           </p>
         </div>
 
-        {[1, 2, 3].map((n) => (
-          <p key={n} className="test-reveal text-display text-expanded mb-16">
-            Reveal {n}
+        {about.paragraphs.map((text) => (
+          <p key={text.slice(0, 24)} className="test-reveal text-lead mb-12 max-w-2xl">
+            {text}
           </p>
         ))}
       </section>
@@ -122,10 +139,13 @@ function TestSections() {
 
 export default function App() {
   return (
-    <SmoothScroll>
-      <ScrollRefreshOnFontsReady />
-      <Diagnostics />
-      <TestSections />
-    </SmoothScroll>
+    <LocaleProvider>
+      <DocumentMeta />
+      <SmoothScroll>
+        <ScrollRefreshOnFontsReady />
+        <Diagnostics />
+        <TestSections />
+      </SmoothScroll>
+    </LocaleProvider>
   );
 }
