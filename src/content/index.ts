@@ -10,5 +10,14 @@ import { en } from "./en";
  */
 export const CONTENT: Record<Locale, SiteContent> = { pt, en };
 
-export type { Locale, SiteContent } from "./types";
+export type {
+  Locale,
+  SiteContent,
+  NavItem,
+  Highlight,
+  ExperienceItem,
+  Project,
+  SkillGroup,
+  ContactLink,
+} from "./types";
 export { LOCALES, HTML_LANG } from "./types";
