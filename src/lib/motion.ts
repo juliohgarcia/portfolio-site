@@ -64,3 +64,26 @@ export function prefersReducedMotion(): boolean {
   if (typeof window === "undefined" || !window.matchMedia) return false;
   return window.matchMedia(MOTION_REDUCED).matches;
 }
+
+/**
+ * SCRUB — animacao amarrada a posicao do scroll.
+ *
+ * A diferenca entre "revelar ao rolar" e "a pagina se montando ao rolar"
+ * esta aqui. Com `once: true`, o elemento entra na viewport, anima uma vez
+ * e acabou — a animacao tem vida propria. Com `scrub`, o scroll E a linha do
+ * tempo: parar o dedo para a animacao no meio, subir a desfaz. E isso que da
+ * a sensacao de estar montando a pagina com as proprias maos.
+ *
+ * O numero e a inercia em segundos: quanto a animacao demora para alcancar a
+ * posicao do scroll. `true` seria amarracao rigida (sem inercia), o que fica
+ * duro demais com smooth scroll; ~0.6s acompanha o Lenis sem parecer atrasado.
+ */
+export const SCRUB = 0.6;
+
+/**
+ * Janela padrao de montagem de uma secao: comeca quando o topo do elemento
+ * cruza 85% da altura da viewport e termina quando chega a 55%. A animacao
+ * acontece a vista, nao antes de a pessoa chegar nela.
+ */
+export const SCENE_START = "top 85%";
+export const SCENE_END = "top 55%";

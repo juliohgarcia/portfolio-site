@@ -75,7 +75,16 @@ export function ProjectCard({ project, index, labels }: ProjectCardProps) {
   return (
     <li
       ref={root}
-      className="project-card border-ink-line group border-t py-10 first:border-t-0 md:py-14"
+      // `sticky` + fundo solido: o card para na altura do topo e o proximo
+      // sobe por cima dele. `origin-top` faz o encolhimento recuar em vez de
+      // puxar o card para o centro.
+      //
+      // `motion-safe:` e importante aqui. O sticky nao e animacao, mas cria
+      // sobreposicao de conteudo — e sem o GSAP para encolher e apagar o card
+      // de tras (que nao roda em movimento reduzido), o empilhamento perderia
+      // a pista visual de profundidade e viraria so cards se cobrindo. Em
+      // movimento reduzido a lista volta a ser uma lista.
+      className="project-card bg-ink border-ink-line group motion-safe:sticky motion-safe:top-[18vh] origin-top border-t py-10 md:py-14"
     >
       <div className="flex items-start gap-6 md:gap-12">
         <span aria-hidden="true" className="text-label text-paper-dim/60 shrink-0 pt-3">

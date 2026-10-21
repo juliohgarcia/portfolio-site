@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
-import { DURATION, EASE, MOTION_OK } from "@/lib/motion";
+import { MOTION_OK, SCENE_END, SCENE_START, SCRUB } from "@/lib/motion";
 import { useContent, useLocale } from "@/i18n/locale-context";
 import { isPlaceholder } from "@/content/placeholders";
 import { RevealText } from "@/components/ui/RevealText";
@@ -36,18 +36,28 @@ export function Experience() {
           },
         });
 
-        const items = gsap.from(".exp-item", {
-          opacity: 0,
-          y: 40,
-          duration: DURATION.base,
-          ease: EASE.expoOut,
-          stagger: 0.15,
-          scrollTrigger: { trigger: ".exp-list", start: "top 75%", once: true },
-        });
+        // Cada item monta amarrado a PROPRIA posicao na tela, nao a um
+        // gatilho unico da lista. E isso que faz a trajetoria se escrever
+        // conforme a pessoa desce, em vez de aparecer inteira de uma vez.
+        const items = gsap.utils.toArray<HTMLElement>(".exp-item").map((item) =>
+          gsap.from(item, {
+            opacity: 0,
+            y: 56,
+            // Entra levemente deslocado da linha do tempo e se encaixa nela.
+            x: -24,
+            ease: "none",
+            scrollTrigger: {
+              trigger: item,
+              start: SCENE_START,
+              end: SCENE_END,
+              scrub: SCRUB,
+            },
+          }),
+        );
 
         return () => {
           line.kill();
-          items.kill();
+          items.forEach((tween) => tween.kill());
         };
       });
 

@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
-import { DURATION, EASE, MOTION_OK } from "@/lib/motion";
+import { MOTION_OK, SCENE_END, SCENE_START, SCRUB } from "@/lib/motion";
 import { useContent, useLocale } from "@/i18n/locale-context";
 import { useParallax } from "@/hooks/useParallax";
 import { RevealText } from "@/components/ui/RevealText";
@@ -15,7 +15,13 @@ export function About() {
 
   useParallax(root);
 
-  /** Os numeros em destaque contam para cima quando entram na tela. */
+  /**
+   * Montagem por scroll.
+   *
+   * Cada destaque entra amarrado a propria posicao na tela (`trigger: item`),
+   * nao a um gatilho unico da lista. O efeito e de pecas se encaixando uma a
+   * uma conforme a pessoa desce, em vez de tudo aparecer de uma vez.
+   */
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
@@ -23,16 +29,21 @@ export function About() {
       mm.add(MOTION_OK, () => {
         const items = gsap.utils.toArray<HTMLElement>(".about-highlight");
 
-        const tween = gsap.from(items, {
-          opacity: 0,
-          y: 32,
-          duration: DURATION.base,
-          ease: EASE.expoOut,
-          stagger: 0.12,
-          scrollTrigger: { trigger: ".about-highlights", start: "top 85%", once: true },
-        });
+        const tweens = items.map((item) =>
+          gsap.from(item, {
+            opacity: 0,
+            y: 48,
+            ease: "none",
+            scrollTrigger: {
+              trigger: item,
+              start: SCENE_START,
+              end: SCENE_END,
+              scrub: SCRUB,
+            },
+          }),
+        );
 
-        return () => tween.kill();
+        return () => tweens.forEach((tween) => tween.kill());
       });
 
       return () => mm.revert();
@@ -69,10 +80,12 @@ export function About() {
 
         {/* Os destaques sobem um pouco mais devagar que o texto, criando
             profundidade sem que nada pareca descolado. */}
-        <ul
-          className="about-highlights divide-ink-line md:col-span-4 md:col-start-9 md:divide-y"
-          data-parallax="-6"
-        >
+        {/* `sticky` em CSS puro em vez de pin do ScrollTrigger: o navegador
+            resolve nativamente, sem reescrever a altura do documento nem criar
+            spacer, e continua correto se o conteudo mudar de tamanho na troca
+            de idioma. Pin so vale quando se precisa de algo que o sticky nao
+            faz. */}
+        <ul className="about-highlights divide-ink-line md:col-span-4 md:col-start-9 md:sticky md:top-32 md:self-start md:divide-y">
           {about.highlights.map((highlight) => (
             <li key={highlight.label} className="about-highlight py-6 first:pt-0">
               <p className="text-expanded text-title text-lime">{highlight.value}</p>

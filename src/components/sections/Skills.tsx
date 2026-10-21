@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
-import { DURATION, EASE, MOTION_OK } from "@/lib/motion";
+import { MOTION_OK, SCRUB } from "@/lib/motion";
 import { useContent, useLocale } from "@/i18n/locale-context";
 import { RevealText } from "@/components/ui/RevealText";
 import { SectionLabel } from "@/components/ui/SectionLabel";
@@ -24,16 +24,25 @@ export function Skills() {
       const mm = gsap.matchMedia();
 
       mm.add(MOTION_OK, () => {
-        const tween = gsap.from(".skill-group", {
-          opacity: 0,
-          y: 32,
-          duration: DURATION.base,
-          ease: EASE.expoOut,
-          stagger: 0.1,
-          scrollTrigger: { trigger: ".skill-grid", start: "top 80%", once: true },
-        });
+        // As colunas sobem em ritmos ligeiramente diferentes, o que faz a
+        // grade se montar em vez de aparecer pronta. O deslocamento cresce da
+        // esquerda para a direita (index * 20), entao a ultima coluna chega
+        // por ultimo — mesma leitura de um texto, sem precisar de stagger.
+        const tweens = gsap.utils.toArray<HTMLElement>(".skill-group").map((group, index) =>
+          gsap.from(group, {
+            opacity: 0,
+            y: 60 + index * 20,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".skill-grid",
+              start: "top 90%",
+              end: "top 45%",
+              scrub: SCRUB,
+            },
+          }),
+        );
 
-        return () => tween.kill();
+        return () => tweens.forEach((tween) => tween.kill());
       });
 
       return () => mm.revert();

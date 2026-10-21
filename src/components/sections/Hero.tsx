@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
-import { DURATION, EASE, MOTION_OK } from "@/lib/motion";
+import { DURATION, EASE, MOTION_OK, SCRUB } from "@/lib/motion";
 import { useContent, useLocale } from "@/i18n/locale-context";
 import { useIntroDone } from "@/hooks/useIntro";
 import { RevealText } from "@/components/ui/RevealText";
@@ -44,6 +44,27 @@ export function Hero() {
           )
           .from(".hero-hint", { opacity: 0, duration: DURATION.base, ease: EASE.softOut }, 1.1);
 
+        // --- SAIDA AMARRADA AO SCROLL ---
+        // O hero nao apenas some: ele recua. O titulo sobe e perde escala
+        // enquanto a secao seguinte avanca por cima, o que da a leitura de
+        // camadas empilhadas em vez de blocos em sequencia.
+        //
+        // `scrub` faz o progresso seguir o scroll: parar o dedo para o
+        // movimento no meio, subir o desfaz. Sem isso seria so um fade.
+        const exit = gsap.timeline({
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: SCRUB,
+          },
+        });
+
+        exit
+          .to(".hero-title", { yPercent: -18, scale: 0.92, opacity: 0.25, ease: "none" }, 0)
+          .to(".hero-eyebrow, .hero-subtitle", { opacity: 0, y: -30, ease: "none" }, 0)
+          .to(".hero-hint", { opacity: 0, ease: "none" }, 0);
+
         // Indicador de scroll em loop suave — convida a rolar sem ser um GIF.
         const hint = gsap.to(".hero-hint-line", {
           scaleY: 0.3,
@@ -57,6 +78,7 @@ export function Hero() {
         return () => {
           tl.kill();
           hint.kill();
+          exit.kill();
         };
       });
 
@@ -76,7 +98,7 @@ export function Hero() {
       <div className="container-page">
         <p className="hero-eyebrow text-label text-paper-dim mb-8 md:mb-12">{hero.eyebrow}</p>
 
-        <h1 className="text-expanded text-hero text-paper">
+        <h1 className="hero-title text-expanded text-hero text-paper origin-top">
           {hero.titleLines.map((line, index) => (
             <RevealText
               // A chave inclui o idioma: trocar PT/EN remonta o componente e
