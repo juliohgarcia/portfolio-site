@@ -172,11 +172,19 @@ JS/TS, Node, Express, PostgreSQL e PHP (React e GSAP entram como "aprendendo").
 O README do GitHub dele diz "developer in the making" — o site usa as mesmas
 palavras de propósito, para os dois perfis lerem como a mesma pessoa.
 
-**Dados reais já no conteúdo** (de github.com/juliohgarcia, out/2026):
-nome, Autentique, Ciência da Computação, Rio Grande do Sul, e-mail e os links
-de GitHub, LinkedIn e Instagram. O LinkedIn bloqueia acesso automatizado
-(HTTP 999) — qualquer dado de lá precisa vir do próprio Júlio.
+**Dados reais no conteúdo** (GitHub out/2026 + prints do LinkedIn enviados
+pelo Júlio): nome, Autentique (suporte a API, ago/2026 — hoje), Astrus Digital
+(nov/2025 — ago/2026, infra web), Ciência da Computação na URI, 13 certificados
+OneBitCode (fev—out/2025), Erechim/RS, e-mail e links.
 
-**Placeholders restantes** — confira com `grep -rn "{{" src/content/`:
-`{{PERIODO_AUTENTIQUE}}`, `{{PERIODO_FACULDADE}}`, `{{ANO_INICIO_ESTUDOS}}`,
-`{{URL_REPO_PORTFOLIO}}` (sai quando o repo for publicado).
+O LinkedIn bloqueia acesso automatizado (HTTP 999 / 301 para login) — qualquer
+dado novo de lá precisa vir do próprio Júlio, por print ou PDF.
+
+**Placeholder restante:** `{{URL_REPO_PORTFOLIO}}`, que sai sozinho quando o
+repositório for publicado. Confira com:
+`grep -rn '"{{[A-Z_0-9]*}}"' src/content/*.ts`
+
+**Nunca invente dado de trajetória.** Na primeira versão eu escrevi descrições
+plausíveis para os empregos do Júlio; elas estavam erradas e eram exatamente o
+que um entrevistador exploraria. Se faltar dado, use `{{PLACEHOLDER}}` — o
+`isPlaceholder` cuida de não renderizar.

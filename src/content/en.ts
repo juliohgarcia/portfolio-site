@@ -12,7 +12,7 @@ export const en = {
   meta: {
     title: "Júlio Henrique Garcia — Developer in the making",
     description:
-      "IT support analyst at Autentique and Computer Science student, moving into development. TypeScript, Node.js and PostgreSQL.",
+      "Support analyst at Autentique, focused on API support and integrations. Computer Science student at URI, moving into development. TypeScript, Node.js, PostgreSQL and PHP.",
   },
 
   nav: {
@@ -33,7 +33,7 @@ export const en = {
     eyebrow: "Júlio Henrique Garcia · Erechim, Brazil",
     titleLines: ["Support", "to", "developer"],
     subtitle:
-      "For 11 months I have been fixing problems for the people who use the software. Alongside it, I study Computer Science and learn to build it.",
+      "I work on API support and integrations at Autentique. Alongside it, I study Computer Science and learn to build the other side of the software.",
     scrollHint: "scroll",
   },
 
@@ -46,8 +46,8 @@ export const en = {
       "Alongside that I am on the other side, writing the code. I brought the habit of asking “what happens when this fails?” before asking “how do I make this work?”. Support teaches you that order early, and it holds on either side of the stack.",
     ],
     highlights: [
-      { value: "11+", label: "months debugging production systems" },
-      { value: "PHP & Laravel", label: "current focus" },
+      { value: "API support", label: "client integrations at Autentique" },
+      { value: "13 certificates", label: "OneBitCode · Feb to Oct 2025" },
       { value: "Erechim · Brazil", label: "open to remote roles" },
     ],
   },
@@ -57,36 +57,45 @@ export const en = {
     title: "How I got here",
     items: [
       {
-        period: "{{PERIODO_AUTENTIQUE}}",
-        role: "IT Support Analyst",
+        period: "Aug 2026 — now",
+        role: "Support Analyst",
         company: "Autentique",
         description:
-          "End-to-end incident handling: reproducing the issue, analysing logs, escalating to engineering and communicating with whoever reported it. I am the bridge between the user's account and the technical cause.",
-        tags: ["Log analysis", "SQL", "REST APIs", "Documentation"],
+          "API support at a Brazilian electronic signature platform: I help clients integrate the product and get the most out of it. It is the point of the operation closest to the people writing code — reading a malformed request and explaining why is already half of development work.",
+        tags: ["REST APIs", "Integrations", "Technical documentation"],
       },
       {
-        period: "{{PERIODO_ASTRUS}}",
-        role: "Tier 1 Support Analyst",
+        period: "Nov 2025 — Aug 2026",
+        role: "Support Analyst",
         company: "Astrus Digital",
         description:
-          "First contact with support at scale: triaging and resolving first-level tickets, writing down what had no documentation and routing what needed another team.",
-        tags: ["Tier 1 support", "Ticket triage", "Documentation"],
+          "Technical support and web infrastructure: a high volume of tickets, from configuration to platform bugs, diagnosing server and application errors and escalating to the dev team with reproduction steps. I administered hosting environments on WHM/cPanel, configured DNS and custom-domain email (including SPF and deliverability analysis), maintained WordPress sites, handled e-commerce integrations and monitored system health on Datadog. I also translated Figma designs into live interfaces and contributed to front-end adjustments.",
+        tags: [
+          "Linux",
+          "WHM/cPanel",
+          "DNS",
+          "Datadog",
+          "WordPress",
+          "phpMyAdmin",
+          "Figma",
+          "E-commerce",
+        ],
       },
       {
-        period: "{{PERIODO_FACULDADE}}",
+        period: "In progress",
         role: "Computer Science",
-        company: "Degree in progress",
+        company: "URI — Universidade Regional Integrada",
         description:
           "The formal grounding for what I had been learning hands-on: programming logic, data structures, relational databases and networking fundamentals.",
         tags: ["Algorithms", "Data structures", "Databases"],
       },
       {
-        period: "{{ANO_INICIO_ESTUDOS}} — now",
-        role: "Moving into development",
-        company: "Self-directed study",
+        period: "Feb 2025 — Oct 2025",
+        role: "Web development track",
+        company: "OneBitCode · 13 certificates",
         description:
-          "Continuous study through my own projects and public notes: JavaScript and TypeScript, APIs with Node.js and Express, PostgreSQL, and now PHP and Laravel. This site is one of those projects — built from scratch to properly learn motion on the web.",
-        tags: ["TypeScript", "Node.js", "PostgreSQL", "React"],
+          "A track completed in sequence, from February to October: HTML5 and CSS3, JavaScript across six modules up to ES6+, Git and GitHub, TypeScript, Node.js — including web applications with JWT and bcrypt — and PostgreSQL. February to October, without skipping a step.",
+        tags: ["HTML5", "CSS3", "JavaScript (ES6+)", "TypeScript", "Node.js", "PostgreSQL", "Git"],
       },
     ],
   },
@@ -118,25 +127,19 @@ export const en = {
     groups: [
       {
         name: "Languages",
-        items: ["JavaScript", "TypeScript", "PHP", "SQL"],
+        items: ["JavaScript (ES6+)", "TypeScript", "PHP", "SQL"],
       },
       {
         name: "Back-end & data",
-        items: ["Node.js", "Express", "PostgreSQL", "Laravel (learning)"],
+        items: ["Node.js", "Express", "PostgreSQL", "MongoDB", "Laravel (learning)"],
       },
       {
         name: "Front-end",
-        items: ["Semantic HTML", "CSS", "Tailwind", "React (learning)", "GSAP (learning)"],
+        items: ["HTML5", "CSS3", "Tailwind", "Figma", "React (learning)", "GSAP (learning)"],
       },
       {
-        name: "Brought from support",
-        items: [
-          "Systematic debugging",
-          "Log reading",
-          "Technical communication",
-          "Documentation",
-          "Git · Linux",
-        ],
+        name: "Infrastructure & support",
+        items: ["Linux", "WHM/cPanel", "DNS", "Datadog", "WordPress", "Git & GitHub"],
       },
     ],
   },

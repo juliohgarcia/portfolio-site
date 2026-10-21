@@ -14,7 +14,7 @@ export const pt = {
   meta: {
     title: "Júlio Henrique Garcia — Desenvolvedor em formação",
     description:
-      "Analista de suporte de TI na Autentique e estudante de Ciência da Computação, em transição para o desenvolvimento. TypeScript, Node.js e PostgreSQL.",
+      "Analista de suporte na Autentique, com foco em suporte a API e integrações. Estudante de Ciência da Computação na URI, em transição para o desenvolvimento. TypeScript, Node.js, PostgreSQL e PHP.",
   },
 
   nav: {
@@ -35,7 +35,7 @@ export const pt = {
     eyebrow: "Júlio Henrique Garcia · Erechim, RS",
     titleLines: ["Suporte", "vira", "código"],
     subtitle:
-      "Faz 11 meses que resolvo os problemas de quem usa o software. Em paralelo, estudo Ciência da Computação e aprendo a construí-lo.",
+      "Trabalho com suporte a API e integrações na Autentique. Em paralelo, estudo Ciência da Computação e aprendo a construir o outro lado do software.",
     scrollHint: "role",
   },
 
@@ -48,8 +48,8 @@ export const pt = {
       "Em paralelo estou do outro lado, escrevendo o código. Trouxe comigo o hábito de perguntar “o que acontece quando isso falha?” antes de perguntar “como faço isso funcionar?”. É uma ordem de perguntas que o suporte ensina cedo, e que continua valendo de qualquer lado da stack.",
     ],
     highlights: [
-      { value: "11+", label: "meses depurando sistemas em produção" },
-      { value: "PHP & Laravel", label: "foco atual de estudo" },
+      { value: "Suporte a API", label: "integrações de clientes na Autentique" },
+      { value: "13 certificados", label: "OneBitCode · fev a out de 2025" },
       { value: "Erechim · RS", label: "disponível para remoto" },
     ],
   },
@@ -59,36 +59,45 @@ export const pt = {
     title: "O caminho até aqui",
     items: [
       {
-        period: "{{PERIODO_AUTENTIQUE}}",
-        role: "Analista de Suporte de TI",
+        period: "ago. 2026 — hoje",
+        role: "Analista de Suporte",
         company: "Autentique",
         description:
-          "Atendimento de incidentes de ponta a ponta: reprodução do problema, análise de logs, escalonamento para a engenharia e comunicação com quem reportou. Sou a ponte entre o relato de quem usa e a causa técnica.",
-        tags: ["Análise de logs", "SQL", "APIs REST", "Documentação"],
+          "Suporte a API numa plataforma de assinatura eletrônica: ajudo clientes a integrar o produto e a tirar proveito dele. É o ponto da operação mais próximo de quem escreve código — ler uma requisição malformada e explicar o porquê já é metade do trabalho de desenvolvimento.",
+        tags: ["APIs REST", "Integrações", "Documentação técnica"],
       },
       {
-        period: "{{PERIODO_ASTRUS}}",
-        role: "Analista de Suporte N1",
+        period: "nov. 2025 — ago. 2026",
+        role: "Analista de Suporte",
         company: "Astrus Digital",
         description:
-          "Primeiro contato com suporte em escala: triagem e resolução de chamados de primeiro nível, registro do que não tinha documentação e encaminhamento do que precisava de outro time.",
-        tags: ["Atendimento N1", "Triagem de chamados", "Documentação"],
+          "Suporte técnico e infraestrutura web: alto volume de chamados, de configuração a bugs de plataforma, com diagnóstico de erros de servidor e aplicação e escalonamento para o time de desenvolvimento com passos de reprodução. Administrei ambientes de hospedagem em WHM/cPanel, configurei DNS e e-mail corporativo (incluindo análise de SPF e entregabilidade), mantive sites WordPress, cuidei de integrações de e-commerce e monitorei a saúde dos sistemas no Datadog. Também traduzi telas do Figma para interface e contribuí com ajustes de front-end.",
+        tags: [
+          "Linux",
+          "WHM/cPanel",
+          "DNS",
+          "Datadog",
+          "WordPress",
+          "phpMyAdmin",
+          "Figma",
+          "E-commerce",
+        ],
       },
       {
-        period: "{{PERIODO_FACULDADE}}",
+        period: "Em andamento",
         role: "Ciência da Computação",
-        company: "Graduação em andamento",
+        company: "URI — Universidade Regional Integrada",
         description:
           "Base formal do que eu vinha aprendendo na prática: lógica de programação, estruturas de dados, bancos de dados relacionais e fundamentos de redes.",
         tags: ["Algoritmos", "Estruturas de dados", "Bancos de dados"],
       },
       {
-        period: "{{ANO_INICIO_ESTUDOS}} — hoje",
-        role: "Transição para desenvolvimento",
-        company: "Estudo autodirigido",
+        period: "fev. 2025 — out. 2025",
+        role: "Formação em desenvolvimento web",
+        company: "OneBitCode · 13 certificados",
         description:
-          "Estudo contínuo com projetos próprios e anotações públicas: JavaScript e TypeScript, APIs com Node.js e Express, PostgreSQL, e agora PHP e Laravel. Este site é um desses projetos — construído do zero para aprender animação na web de verdade.",
-        tags: ["TypeScript", "Node.js", "PostgreSQL", "React"],
+          "Trilha concluída em sequência, de fevereiro a outubro: HTML5 e CSS3, JavaScript em seis módulos até ES6+, Git e GitHub, TypeScript, Node.js — incluindo aplicações web com JWT e bcrypt — e PostgreSQL. De fevereiro a outubro, sem pular etapa.",
+        tags: ["HTML5", "CSS3", "JavaScript (ES6+)", "TypeScript", "Node.js", "PostgreSQL", "Git"],
       },
     ],
   },
@@ -120,25 +129,19 @@ export const pt = {
     groups: [
       {
         name: "Linguagens",
-        items: ["JavaScript", "TypeScript", "PHP", "SQL"],
+        items: ["JavaScript (ES6+)", "TypeScript", "PHP", "SQL"],
       },
       {
         name: "Back-end & dados",
-        items: ["Node.js", "Express", "PostgreSQL", "Laravel (aprendendo)"],
+        items: ["Node.js", "Express", "PostgreSQL", "MongoDB", "Laravel (aprendendo)"],
       },
       {
         name: "Front-end",
-        items: ["HTML semântico", "CSS", "Tailwind", "React (aprendendo)", "GSAP (aprendendo)"],
+        items: ["HTML5", "CSS3", "Tailwind", "Figma", "React (aprendendo)", "GSAP (aprendendo)"],
       },
       {
-        name: "Trazidas do suporte",
-        items: [
-          "Depuração sistemática",
-          "Leitura de log",
-          "Comunicação técnica",
-          "Documentação",
-          "Git · Linux",
-        ],
+        name: "Infraestrutura & suporte",
+        items: ["Linux", "WHM/cPanel", "DNS", "Datadog", "WordPress", "Git & GitHub"],
       },
     ],
   },
