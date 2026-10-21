@@ -3,14 +3,18 @@ import type { SiteContent } from "./types";
 /**
  * Conteudo em portugues.
  *
- * Marcadores {{MAIUSCULAS}} sao dados que o Julio ainda vai preencher.
- * Procure por "{{" antes de publicar: nenhum deve sobrar no ar.
+ * Dados reais extraidos do perfil publico do GitHub (README de
+ * github.com/juliohgarcia, outubro/2026). O LinkedIn bloqueia acesso
+ * automatizado (HTTP 999), entao nada foi tirado de la.
+ *
+ * Marcadores {{MAIUSCULAS}} sao os campos que ainda faltam. Procure por
+ * "{{" antes de publicar: nenhum deve sobrar no ar.
  */
 export const pt = {
   meta: {
-    title: "Júlio Garcia — Desenvolvedor Front-end",
+    title: "Júlio Garcia — Desenvolvedor em formação",
     description:
-      "Analista de suporte em transição para o desenvolvimento front-end. React, TypeScript e animação na web.",
+      "Analista de suporte de TI na Autentique e estudante de Ciência da Computação, em transição para o desenvolvimento. TypeScript, Node.js e PostgreSQL.",
   },
 
   nav: {
@@ -28,10 +32,10 @@ export const pt = {
   },
 
   hero: {
-    eyebrow: "Júlio Garcia · Front-end",
+    eyebrow: "Júlio Henrique Garcia · Rio Grande do Sul",
     titleLines: ["Suporte", "vira", "código"],
     subtitle:
-      "Passei 11 meses resolvendo os problemas de quem usa o software. Agora eu construo o software.",
+      "Analista de suporte de TI na Autentique, estudante de Ciência da Computação. Passo os dias resolvendo problemas de quem usa o software — e as noites aprendendo a construí-lo.",
     scrollHint: "role",
   },
 
@@ -39,14 +43,14 @@ export const pt = {
     label: "01 — Sobre",
     title: "Quem depura em produção aprende rápido",
     paragraphs: [
-      "Comecei no suporte técnico, no ponto exato em que o software encontra a vida real. Meu trabalho era receber o problema já acontecendo: o log confuso, a pessoa sem paciência do outro lado, o bug que só aparece em uma máquina específica.",
-      "Aprendi ali o que curso nenhum ensina bem — reproduzir um erro a partir de uma descrição vaga, isolar os problemas até sobrar uma causa só. E aprendi a traduzir: do que a pessoa relata para o que o sistema de fato fez.",
-      "Em paralelo estou do outro lado, escrevendo o código. Trouxe comigo o hábito de perguntar “o que acontece quando isso falha?” antes de perguntar “como faço isso funcionar?”. Para quem constrói interface, essa ordem muda o resultado.",
+      "Trabalho com suporte técnico, no ponto exato em que o software encontra a vida real. Meu trabalho é receber o problema já acontecendo: o log confuso, a pessoa sem paciência do outro lado, o erro que só aparece em uma configuração específica.",
+      "É ali que se aprende o que curso nenhum ensina bem — reproduzir uma falha a partir de uma descrição vaga, ler stack trace sem entrar em pânico, isolar variáveis até sobrar uma causa só. E traduzir: do que a pessoa relata para o que o sistema de fato fez.",
+      "Agora estou aprendendo o outro lado, escrevendo o código. Trouxe comigo o hábito de perguntar “o que acontece quando isso falha?” antes de perguntar “como faço isso funcionar?”. É uma ordem de perguntas que o suporte ensina cedo, e que continua valendo de qualquer lado da stack.",
     ],
     highlights: [
-      { value: "11+", label: "meses depurando sistemas em produção" },
-      { value: "PHP & Laravel", label: "foco atual de estudo" },
-      { value: "Erechim - RS", label: "disponível para remoto" },
+      { value: "Autentique", label: "Analista de Suporte de TI" },
+      { value: "Ciência da Computação", label: "graduação em andamento" },
+      { value: "RS · GMT-3", label: "aberto a vagas remotas" },
     ],
   },
 
@@ -55,28 +59,28 @@ export const pt = {
     title: "O caminho até aqui",
     items: [
       {
-        period: "{{PERIODO_ATUAL}}",
-        role: "Analista de Suporte Técnico",
+        period: "{{PERIODO_AUTENTIQUE}}",
+        role: "Analista de Suporte de TI",
         company: "Autentique",
         description:
-          "Atendimento de incidentes de ponta a ponta: reprodução do problema, análise de logs, escalonamento para engenharia e comunicação com quem reportou. Virei a ponte entre o relato do usuário e a causa técnica.",
-        tags: ["SQL", "Análise de logs", "APIs REST", "Documentação"],
+          "Atendimento de incidentes de ponta a ponta: reprodução do problema, análise de logs, escalonamento para a engenharia e comunicação com quem reportou. Sou a ponte entre o relato de quem usa e a causa técnica.",
+        tags: ["Análise de logs", "SQL", "APIs REST", "Documentação"],
       },
       {
-        period: "{{PERIODO_ANTERIOR}}",
-        role: "Analista de Suporte N1",
-        company: "Astrus Digital",
+        period: "{{PERIODO_FACULDADE}}",
+        role: "Ciência da Computação",
+        company: "Graduação em andamento",
         description:
-          "{{DESCRICAO_ANTERIOR — o que você fazia e o que isso te ensinou que ainda usa hoje}}",
-        tags: ["{{TAG}}", "{{TAG}}"],
+          "Base formal do que eu vinha aprendendo na prática: lógica de programação, estruturas de dados, bancos de dados relacionais e fundamentos de redes.",
+        tags: ["Algoritmos", "Estruturas de dados", "Bancos de dados"],
       },
       {
         period: "{{ANO_INICIO_ESTUDOS}} — hoje",
         role: "Transição para desenvolvimento",
         company: "Estudo autodirigido",
         description:
-          "Estudo contínuo de front-end com projetos próprios: JavaScript e TypeScript, React, acessibilidade e performance. Este site é um deles — construído do zero para aprender animação na web de verdade.",
-        tags: ["TypeScript", "React", "GSAP", "Acessibilidade"],
+          "Estudo contínuo com projetos próprios e anotações públicas: JavaScript e TypeScript, APIs com Node.js e Express, PostgreSQL, e agora PHP e Laravel. Este site é um desses projetos — construído do zero para aprender animação na web de verdade.",
+        tags: ["TypeScript", "Node.js", "PostgreSQL", "React"],
       },
     ],
   },
@@ -84,30 +88,15 @@ export const pt = {
   projects: {
     label: "03 — Projetos",
     title: "O que eu construí",
-    intro: "Projetos onde eu decidi a arquitetura, errei e corrigi. Em ordem de aprendizado.",
+    intro:
+      "Por enquanto, um só — mas construído do zero, com as decisões técnicas documentadas em vez de escondidas. Os próximos vêm aqui conforme eu terminar.",
     items: [
-      {
-        name: "{{NOME_DO_PROJETO_1}}",
-        year: "{{ANO}}",
-        description:
-          "{{Em uma ou duas frases: que problema resolve e qual foi a decisão técnica difícil}}",
-        tags: ["{{TECNOLOGIA}}", "{{TECNOLOGIA}}"],
-        repoUrl: "{{URL_REPO}}",
-        liveUrl: "{{URL_DEMO}}",
-      },
-      {
-        name: "{{NOME_DO_PROJETO_2}}",
-        year: "{{ANO}}",
-        description: "{{Em uma ou duas frases}}",
-        tags: ["{{TECNOLOGIA}}", "{{TECNOLOGIA}}"],
-        repoUrl: "{{URL_REPO}}",
-      },
       {
         name: "Este portfólio",
         year: "2026",
         description:
-          "Landing page de página única com smooth scroll, animação por scroll e tipografia display. Construída para estudar GSAP e ScrollTrigger a fundo — incluindo fazer o Lenis e o ScrollTrigger compartilharem um único loop de animação.",
-        tags: ["React", "TypeScript", "GSAP", "Tailwind"],
+          "Landing page de página única com smooth scroll, animação disparada por scroll e tipografia display. A decisão técnica mais interessante foi fazer o Lenis e o ScrollTrigger compartilharem um único loop de animação: cada um com seu próprio requestAnimationFrame é o que faz parallax tremer na maioria dos sites com scroll suave. Toda animação passa por gsap.matchMedia(), então quem pede “reduzir movimento” recebe o site sem animação nenhuma — e nenhum texto depende de JavaScript para ficar visível.",
+        tags: ["React", "TypeScript", "GSAP", "Tailwind", "Vite"],
         repoUrl: "{{URL_REPO_PORTFOLIO}}",
       },
     ],
@@ -119,28 +108,28 @@ export const pt = {
     label: "04 — Skills",
     title: "Com o que eu trabalho",
     intro:
-      "O que já uso com confiança e o que estou aprendendo agora — separados, porque a diferença importa.",
+      "O que já uso com confiança e o que estou aprendendo agora — marcados de forma diferente, porque a distinção importa para quem vai me contratar.",
     groups: [
       {
+        name: "Linguagens",
+        items: ["JavaScript", "TypeScript", "PHP", "SQL"],
+      },
+      {
+        name: "Back-end & dados",
+        items: ["Node.js", "Express", "PostgreSQL", "Laravel (aprendendo)"],
+      },
+      {
         name: "Front-end",
-        items: ["HTML semântico", "CSS / Tailwind", "JavaScript", "TypeScript", "React"],
-      },
-      {
-        name: "Animação & interação",
-        items: ["GSAP", "ScrollTrigger", "Lenis", "Acessibilidade de movimento"],
-      },
-      {
-        name: "Ferramentas",
-        items: ["Git", "Vite", "ESLint", "Chrome DevTools", "Figma"],
+        items: ["HTML semântico", "CSS", "Tailwind", "React (aprendendo)", "GSAP (aprendendo)"],
       },
       {
         name: "Trazidas do suporte",
         items: [
           "Depuração sistemática",
           "Leitura de log",
-          "SQL",
           "Comunicação técnica",
           "Documentação",
+          "Git · Linux",
         ],
       },
     ],
@@ -150,18 +139,27 @@ export const pt = {
     label: "05 — Contato",
     title: "Vamos conversar",
     invitation:
-      "Estou procurando minha primeira oportunidade como desenvolvedor front-end. Se o que você leu aqui faz sentido para o seu time, me escreva.",
-    email: "{{EMAIL}}",
+      "Estou aberto a vagas de estágio e às primeiras oportunidades como desenvolvedor — e também a trocar ideia com quem está na mesma estrada. Se fizer sentido para o seu time, me escreva.",
+    email: "julio.henriqu3@hotmail.com",
     links: [
-      { label: "GitHub", handle: "{{GITHUB_HANDLE}}", href: "{{GITHUB_URL}}" },
-      { label: "LinkedIn", handle: "{{LINKEDIN_HANDLE}}", href: "{{LINKEDIN_URL}}" },
+      { label: "GitHub", handle: "@juliohgarcia", href: "https://github.com/juliohgarcia" },
+      {
+        label: "LinkedIn",
+        handle: "in/juliohgarcia",
+        href: "https://www.linkedin.com/in/juliohgarcia/",
+      },
+      {
+        label: "Instagram",
+        handle: "@juliohenriqu3",
+        href: "https://www.instagram.com/juliohenriqu3/",
+      },
     ],
   },
 
   footer: {
-    note: "Júlio Garcia · {{CIDADE}}",
+    note: "Júlio Henrique Garcia · Rio Grande do Sul, Brasil",
     builtWith: "Construído com React, TypeScript e GSAP",
   },
 
-  marquee: ["Suporte → Dev", "React", "TypeScript", "Disponível para projetos", "GSAP"],
+  marquee: ["Suporte → Dev", "TypeScript", "Node.js", "PostgreSQL", "Aberto a estágio"],
 } satisfies SiteContent;

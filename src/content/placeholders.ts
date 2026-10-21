@@ -51,8 +51,6 @@ export function warnAboutPlaceholders(content: unknown): void {
   walk(content, "");
 
   if (found.length > 0) {
-    console.info(
-      `[conteúdo] ${found.length} campo(s) ainda com placeholder:\n` + found.join("\n"),
-    );
+    console.info(`[conteúdo] ${found.length} campo(s) ainda com placeholder:\n` + found.join("\n"));
   }
 }

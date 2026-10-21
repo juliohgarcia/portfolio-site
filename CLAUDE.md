@@ -165,6 +165,18 @@ preloader com contador, cursor customizado, marquee infinito, deploy na Vercel.
 quando der · projetos reais no lugar dos placeholders · avaliar `ScrollSmoother`
 do GSAP como alternativa ao Lenis.
 
-**Placeholders aguardando dados reais do Júlio:** nome completo, tempo em suporte,
-empresa(s), formação, links (GitHub/LinkedIn/e-mail), domínio final. Estão
-marcados como `{{MAIUSCULAS}}` em `src/content/`.
+**Posicionamento (decidido em out/2026):** neutro — "analista de suporte em
+transição para desenvolvimento", **sem** especialidade fixa. Não reposicione
+como front-end ou fullstack sem o Júlio pedir: a stack real dele é
+JS/TS, Node, Express, PostgreSQL e PHP (React e GSAP entram como "aprendendo").
+O README do GitHub dele diz "developer in the making" — o site usa as mesmas
+palavras de propósito, para os dois perfis lerem como a mesma pessoa.
+
+**Dados reais já no conteúdo** (de github.com/juliohgarcia, out/2026):
+nome, Autentique, Ciência da Computação, Rio Grande do Sul, e-mail e os links
+de GitHub, LinkedIn e Instagram. O LinkedIn bloqueia acesso automatizado
+(HTTP 999) — qualquer dado de lá precisa vir do próprio Júlio.
+
+**Placeholders restantes** — confira com `grep -rn "{{" src/content/`:
+`{{PERIODO_AUTENTIQUE}}`, `{{PERIODO_FACULDADE}}`, `{{ANO_INICIO_ESTUDOS}}`,
+`{{URL_REPO_PORTFOLIO}}` (sai quando o repo for publicado).

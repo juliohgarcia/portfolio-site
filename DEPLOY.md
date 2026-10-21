@@ -22,11 +22,16 @@
 npm run lint && npm run typecheck && npm run build && npm run preview
 ```
 
-E confira que **nenhum `{{PLACEHOLDER}}` sobrou**:
+E confira que **nenhum `{{PLACEHOLDER}}` sobrou**. O `grep` simples também
+acha as menções em comentários, então filtre por linhas que são de fato valor:
 
 ```bash
-grep -rn "{{" src/content/
+grep -rn '"{{[A-Z_0-9]*}}"' src/content/*.ts
 ```
+
+Restantes hoje: `{{PERIODO_AUTENTIQUE}}`, `{{PERIODO_FACULDADE}}`,
+`{{ANO_INICIO_ESTUDOS}}` e `{{URL_REPO_PORTFOLIO}}` (este sai sozinho quando o
+repositório for publicado no GitHub).
 
 Em desenvolvimento, o console do navegador já lista os campos pendentes.
 
