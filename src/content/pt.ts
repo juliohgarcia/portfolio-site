@@ -23,6 +23,8 @@ export const pt = {
     ],
     openMenu: "Abrir menu",
     closeMenu: "Fechar menu",
+    mainNavLabel: "Navegação principal",
+    skipToContent: "Pular para o conteúdo",
   },
 
   hero: {

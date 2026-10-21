@@ -76,6 +76,10 @@ export type SiteContent = {
     /** Rotulos acessiveis do botao de menu no mobile. */
     openMenu: string;
     closeMenu: string;
+    /** Rotulo do <nav>, lido por leitor de tela ao listar as regioes da pagina. */
+    mainNavLabel: string;
+    /** Primeiro link da pagina, visivel so ao receber foco por teclado. */
+    skipToContent: string;
   };
 
   hero: {

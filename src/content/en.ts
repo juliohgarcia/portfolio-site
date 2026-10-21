@@ -26,6 +26,8 @@ export const en = {
     ],
     openMenu: "Open menu",
     closeMenu: "Close menu",
+    mainNavLabel: "Main navigation",
+    skipToContent: "Skip to content",
   },
 
   hero: {
@@ -67,7 +69,8 @@ export const en = {
         period: "{{PERIODO_ANTERIOR}}",
         role: "{{CARGO_ANTERIOR}}",
         company: "{{EMPRESA_ANTERIOR}}",
-        description: "{{DESCRICAO_ANTERIOR — what you did and what it taught you that still helps}}",
+        description:
+          "{{DESCRICAO_ANTERIOR — what you did and what it taught you that still helps}}",
         tags: ["{{TAG}}", "{{TAG}}"],
       },
       {
