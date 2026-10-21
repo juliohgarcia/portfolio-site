@@ -43,9 +43,10 @@ export const pt = {
     label: "01 — Sobre",
     title: "Quem depura em produção aprende rápido",
     paragraphs: [
-      "Trabalho com suporte técnico, no ponto exato em que o software encontra a vida real. Meu trabalho é receber o problema já acontecendo: o log confuso, a pessoa sem paciência do outro lado, o erro que só aparece em uma configuração específica.",
-      "É ali que se aprende o que curso nenhum ensina bem — reproduzir um erro a partir de uma descrição vaga, isolar os problemas até sobrar uma causa só. E aprendi a traduzir: do que a pessoa relata para o que o sistema de fato fez.",
-      "Em paralelo estou do outro lado, escrevendo o código. Trouxe comigo o hábito de perguntar “o que acontece quando isso falha?” antes de perguntar “como faço isso funcionar?”. É uma ordem de perguntas que o suporte ensina cedo, e que continua valendo de qualquer lado da stack.",
+      "Meu primeiro emprego em suporte foi em infraestrutura web, na Astrus: WHM/cPanel, DNS que não propaga, e-mail corporativo caindo no spam por um registro SPF mal configurado, integração de e-commerce que perde o pedido no meio do funil de pagamento. Problema que chega assim não vem com stack trace — vem com “parou de funcionar”.",
+      "Foi ali que aprendi a trabalhar de trás para frente: partir do sintoma que o cliente descreve e eliminar camada por camada — DNS, servidor, aplicação, integração — até sobrar uma causa só. E a registrar o que encontrei de um jeito que o time de desenvolvimento conseguisse reproduzir sem precisar me perguntar nada. Metade do trabalho era técnica; a outra metade era escrever direito.",
+      "Hoje, na Autentique, o suporte é a própria API: ajudo clientes a integrar uma plataforma de assinatura eletrônica. Passo os dias lendo requisição malformada e explicando por que a resposta não é a esperada — que é, no fundo, ler o código dos outros.",
+      "Comecei a estudar desenvolvimento antes de entrar no suporte: a trilha de web foi de fevereiro a outubro de 2025, e o primeiro emprego na área veio em novembro. O caminho de quem lê o código para quem escreve é o que estou percorrendo agora.",
     ],
     highlights: [
       { value: "Suporte a API", label: "integrações de clientes na Autentique" },

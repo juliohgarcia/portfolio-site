@@ -41,9 +41,10 @@ export const en = {
     label: "01 — About",
     title: "Debugging in production teaches you fast",
     paragraphs: [
-      "I work in technical support, at the exact point where software meets real life. My job is to receive the problem already in progress: the confusing log, the person losing patience on the other end, the error that only shows up in one specific setup.",
-      "That is where you learn what no course teaches well — reproducing an error from a vague description, isolating the problems until a single cause is left. And translating: from what someone reports to what the system actually did.",
-      "Alongside that I am on the other side, writing the code. I brought the habit of asking “what happens when this fails?” before asking “how do I make this work?”. Support teaches you that order early, and it holds on either side of the stack.",
+      "My first support job was in web infrastructure, at Astrus: WHM/cPanel, DNS that will not propagate, company email landing in spam because of a badly configured SPF record, an e-commerce integration losing the order halfway through the payment funnel. A problem that arrives like that does not come with a stack trace — it comes with “it stopped working”.",
+      "That is where I learned to work backwards: start from the symptom the client describes and strip away one layer at a time — DNS, server, application, integration — until a single cause is left. And to write down what I found so the dev team could reproduce it without asking me anything. Half the job was technical; the other half was writing it properly.",
+      "Today, at Autentique, support is the API itself: I help clients integrate an electronic signature platform. I spend my days reading malformed requests and explaining why the response is not the expected one — which is, essentially, reading other people's code.",
+      "I started studying development before I got into support: the web track ran from February to October 2025, and the first job in the field came in November. The road from reading the code to writing it is the one I am on now.",
     ],
     highlights: [
       { value: "API support", label: "client integrations at Autentique" },
