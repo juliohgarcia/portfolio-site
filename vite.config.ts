@@ -12,8 +12,11 @@ export default defineConfig({
     },
   },
   build: {
-    // Avisa no console quando um chunk passa de 180 kB (nosso orcamento e 170 kB gzip).
-    chunkSizeWarningLimit: 180,
+    // Atencao: este limite e comparado ao tamanho MINIFICADO, nao ao gzip.
+    // O orcamento real do projeto e 170 kB gzip somando todos os chunks de JS
+    // (conferir na saida do `npm run build`). 260 kB minificado por chunk e o
+    // ponto em que vale investigar — aproximadamente 80 kB gzip.
+    chunkSizeWarningLimit: 260,
     rollupOptions: {
       output: {
         // Separa GSAP em seu proprio chunk: muda pouco entre deploys, entao o

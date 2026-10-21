@@ -1,11 +1,131 @@
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "@/lib/gsap";
+import { DURATION, EASE, MOTION_OK, MOTION_REDUCED } from "@/lib/motion";
+import { SmoothScroll, ScrollRefreshOnFontsReady } from "@/components/layout/SmoothScroll";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useSmoothScroll } from "@/hooks/useSmoothScroll";
+
+/**
+ * PAGINA DE TESTE DA FASE 1A — temporaria.
+ *
+ * Existe para provar tres coisas antes de qualquer secao real ser construida:
+ *   1. o scroll suave funciona e o ScrollTrigger esta sincronizado com ele;
+ *   2. o parallax nao treme (um unico loop de animacao);
+ *   3. com "reduzir movimento" ativo, nada anima e TODO texto continua legivel.
+ *
+ * Sera substituida pelas secoes reais na Fase 1D.
+ */
+function Diagnostics() {
+  const reduced = useReducedMotion();
+
+  return (
+    <div className="border-ink-line bg-ink-soft fixed top-4 right-4 z-50 rounded border p-3 font-mono text-xs">
+      <p>
+        reduced-motion: <strong className="text-lime">{reduced ? "ON" : "off"}</strong>
+      </p>
+      <p>
+        scroll: <strong className="text-lime">{reduced ? "nativo" : "lenis"}</strong>
+      </p>
+    </div>
+  );
+}
+
+function TestSections() {
+  const root = useRef<HTMLDivElement>(null);
+  const { scrollTo } = useSmoothScroll();
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+
+      mm.add(MOTION_OK, () => {
+        // Parallax: o bloco sobe mais devagar que a pagina.
+        gsap.to(".test-parallax", {
+          yPercent: -35,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".test-parallax",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+
+        // Revelacao por scroll. Note `from`, nao `fromTo`: o estado escondido
+        // e aplicado por JS neste instante. O texto nasce visivel no HTML.
+        gsap.utils.toArray<HTMLElement>(".test-reveal").forEach((el) => {
+          gsap.from(el, {
+            y: 40,
+            opacity: 0,
+            duration: DURATION.reveal,
+            ease: EASE.expoOut,
+            scrollTrigger: { trigger: el, start: "top 85%" },
+          });
+        });
+      });
+
+      mm.add(MOTION_REDUCED, () => {
+        // Sem tween: so garante que tudo esta no estado final e visivel.
+        gsap.set(".test-parallax, .test-reveal", { clearProps: "all" });
+      });
+
+      return () => mm.revert();
+    },
+    { scope: root },
+  );
+
+  return (
+    <div ref={root}>
+      <section className="container-page flex min-h-screen flex-col justify-center">
+        <h1 className="text-expanded text-hero">
+          Support
+          <br />
+          to Dev
+        </h1>
+        <button
+          type="button"
+          onClick={() => scrollTo("#alvo", -80)}
+          className="text-label text-lime mt-10 self-start underline underline-offset-4"
+        >
+          Testar scrollTo →
+        </button>
+      </section>
+
+      <section className="container-page min-h-screen py-32">
+        <div className="test-parallax bg-ink-soft border-ink-line mb-24 border p-10">
+          <p className="text-title">Bloco com parallax</p>
+          <p className="text-paper-dim mt-2 text-sm">
+            Role devagar: este bloco deve subir mais lentamente que a página, sem tremer.
+          </p>
+        </div>
+
+        {[1, 2, 3].map((n) => (
+          <p key={n} className="test-reveal text-display text-expanded mb-16">
+            Reveal {n}
+          </p>
+        ))}
+      </section>
+
+      <section id="alvo" className="container-page flex min-h-screen items-center">
+        <div>
+          <p className="text-display text-expanded">Alvo do scrollTo</p>
+          <p className="text-paper-dim text-lead mt-4 max-w-prose">
+            Com movimento reduzido ativo, o salto até aqui é instantâneo e nativo — e os três
+            “Reveal” acima continuam visíveis.
+          </p>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 export default function App() {
   return (
-    <main className="container-page py-24">
-      <h1 className="text-expanded text-hero text-paper">Support to Developer</h1>
-      <p className="text-lead mt-8 max-w-prose text-paper-dim">
-        Fase 0: fundação instalada. Tokens, fontes e GSAP prontos.
-      </p>
-      <p className="text-label mt-4 text-lime uppercase">Acentuação de teste: ação, português, ç</p>
-    </main>
+    <SmoothScroll>
+      <ScrollRefreshOnFontsReady />
+      <Diagnostics />
+      <TestSections />
+    </SmoothScroll>
   );
 }
