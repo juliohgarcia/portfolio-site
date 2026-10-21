@@ -1,0 +1,44 @@
+<!doctype html>
+<!-- lang inicial em pt-BR; o LocaleProvider atualiza este atributo ao trocar de idioma. -->
+<html lang="pt-BR" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <title>Júlio Garcia — Front-end Developer</title>
+    <meta
+      name="description"
+      content="Portfólio de Júlio Garcia: analista de suporte em transição para desenvolvimento front-end. React, TypeScript e animação na web."
+    />
+
+    <!-- Open Graph / redes sociais -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Júlio Garcia — Front-end Developer" />
+    <meta
+      property="og:description"
+      content="Do suporte técnico ao desenvolvimento front-end. Portfólio e trajetória."
+    />
+    <meta property="og:image" content="/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Define a cor de fundo antes do CSS carregar, evitando flash branco. -->
+    <meta name="theme-color" content="#0A0A0A" />
+    <style>
+      html {
+        background-color: #0a0a0a;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Mensagem visível apenas se o JS estiver desabilitado. -->
+    <noscript>
+      <div style="padding: 2rem; color: #f5f2ea; font-family: sans-serif">
+        Este site usa JavaScript para as animações. O conteúdo principal depende dele — por favor,
+        habilite o JavaScript. Você também pode me encontrar no GitHub e no LinkedIn.
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
