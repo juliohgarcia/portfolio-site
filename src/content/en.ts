@@ -10,7 +10,7 @@ import type { SiteContent } from "./types";
  */
 export const en = {
   meta: {
-    title: "Júlio Garcia — Developer in the making",
+    title: "Júlio Henrique Garcia — Developer in the making",
     description:
       "IT support analyst at Autentique and Computer Science student, moving into development. TypeScript, Node.js and PostgreSQL.",
   },
@@ -30,10 +30,10 @@ export const en = {
   },
 
   hero: {
-    eyebrow: "Júlio Henrique Garcia · Southern Brazil",
+    eyebrow: "Júlio Henrique Garcia · Erechim, Brazil",
     titleLines: ["Support", "to", "developer"],
     subtitle:
-      "IT support analyst at Autentique, Computer Science student. I spend my days fixing problems for the people who use the software — and my nights learning to build it.",
+      "For 11 months I have been fixing problems for the people who use the software. Alongside it, I study Computer Science and learn to build it.",
     scrollHint: "scroll",
   },
 
@@ -42,13 +42,13 @@ export const en = {
     title: "Debugging in production teaches you fast",
     paragraphs: [
       "I work in technical support, at the exact point where software meets real life. My job is to receive the problem already in progress: the confusing log, the person losing patience on the other end, the error that only shows up in one specific setup.",
-      "That is where you learn what no course teaches well — reproducing a failure from a vague description, reading a stack trace without panicking, isolating variables until a single cause is left. And translating: from what someone reports to what the system actually did.",
-      "Now I am learning the other side, writing the code. I brought the habit of asking “what happens when this fails?” before asking “how do I make this work?”. Support teaches you that order early, and it holds on either side of the stack.",
+      "That is where you learn what no course teaches well — reproducing an error from a vague description, isolating the problems until a single cause is left. And translating: from what someone reports to what the system actually did.",
+      "Alongside that I am on the other side, writing the code. I brought the habit of asking “what happens when this fails?” before asking “how do I make this work?”. Support teaches you that order early, and it holds on either side of the stack.",
     ],
     highlights: [
-      { value: "Autentique", label: "IT Support Analyst" },
-      { value: "Computer Science", label: "degree in progress" },
-      { value: "Brazil · GMT-3", label: "open to remote roles" },
+      { value: "11+", label: "months debugging production systems" },
+      { value: "PHP & Laravel", label: "current focus" },
+      { value: "Erechim · Brazil", label: "open to remote roles" },
     ],
   },
 
@@ -63,6 +63,14 @@ export const en = {
         description:
           "End-to-end incident handling: reproducing the issue, analysing logs, escalating to engineering and communicating with whoever reported it. I am the bridge between the user's account and the technical cause.",
         tags: ["Log analysis", "SQL", "REST APIs", "Documentation"],
+      },
+      {
+        period: "{{PERIODO_ASTRUS}}",
+        role: "Tier 1 Support Analyst",
+        company: "Astrus Digital",
+        description:
+          "First contact with support at scale: triaging and resolving first-level tickets, writing down what had no documentation and routing what needed another team.",
+        tags: ["Tier 1 support", "Ticket triage", "Documentation"],
       },
       {
         period: "{{PERIODO_FACULDADE}}",

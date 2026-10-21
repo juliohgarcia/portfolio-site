@@ -12,7 +12,7 @@ import type { SiteContent } from "./types";
  */
 export const pt = {
   meta: {
-    title: "Júlio Garcia — Desenvolvedor em formação",
+    title: "Júlio Henrique Garcia — Desenvolvedor em formação",
     description:
       "Analista de suporte de TI na Autentique e estudante de Ciência da Computação, em transição para o desenvolvimento. TypeScript, Node.js e PostgreSQL.",
   },
@@ -32,10 +32,10 @@ export const pt = {
   },
 
   hero: {
-    eyebrow: "Júlio Henrique Garcia · Rio Grande do Sul",
+    eyebrow: "Júlio Henrique Garcia · Erechim, RS",
     titleLines: ["Suporte", "vira", "código"],
     subtitle:
-      "Analista de suporte de TI na Autentique, estudante de Ciência da Computação. Passo os dias resolvendo problemas de quem usa o software — e as noites aprendendo a construí-lo.",
+      "Faz 11 meses que resolvo os problemas de quem usa o software. Em paralelo, estudo Ciência da Computação e aprendo a construí-lo.",
     scrollHint: "role",
   },
 
@@ -44,13 +44,13 @@ export const pt = {
     title: "Quem depura em produção aprende rápido",
     paragraphs: [
       "Trabalho com suporte técnico, no ponto exato em que o software encontra a vida real. Meu trabalho é receber o problema já acontecendo: o log confuso, a pessoa sem paciência do outro lado, o erro que só aparece em uma configuração específica.",
-      "É ali que se aprende o que curso nenhum ensina bem — reproduzir uma falha a partir de uma descrição vaga, ler stack trace sem entrar em pânico, isolar variáveis até sobrar uma causa só. E traduzir: do que a pessoa relata para o que o sistema de fato fez.",
-      "Agora estou aprendendo o outro lado, escrevendo o código. Trouxe comigo o hábito de perguntar “o que acontece quando isso falha?” antes de perguntar “como faço isso funcionar?”. É uma ordem de perguntas que o suporte ensina cedo, e que continua valendo de qualquer lado da stack.",
+      "É ali que se aprende o que curso nenhum ensina bem — reproduzir um erro a partir de uma descrição vaga, isolar os problemas até sobrar uma causa só. E aprendi a traduzir: do que a pessoa relata para o que o sistema de fato fez.",
+      "Em paralelo estou do outro lado, escrevendo o código. Trouxe comigo o hábito de perguntar “o que acontece quando isso falha?” antes de perguntar “como faço isso funcionar?”. É uma ordem de perguntas que o suporte ensina cedo, e que continua valendo de qualquer lado da stack.",
     ],
     highlights: [
-      { value: "Autentique", label: "Analista de Suporte de TI" },
-      { value: "Ciência da Computação", label: "graduação em andamento" },
-      { value: "RS · GMT-3", label: "aberto a vagas remotas" },
+      { value: "11+", label: "meses depurando sistemas em produção" },
+      { value: "PHP & Laravel", label: "foco atual de estudo" },
+      { value: "Erechim · RS", label: "disponível para remoto" },
     ],
   },
 
@@ -65,6 +65,14 @@ export const pt = {
         description:
           "Atendimento de incidentes de ponta a ponta: reprodução do problema, análise de logs, escalonamento para a engenharia e comunicação com quem reportou. Sou a ponte entre o relato de quem usa e a causa técnica.",
         tags: ["Análise de logs", "SQL", "APIs REST", "Documentação"],
+      },
+      {
+        period: "{{PERIODO_ASTRUS}}",
+        role: "Analista de Suporte N1",
+        company: "Astrus Digital",
+        description:
+          "Primeiro contato com suporte em escala: triagem e resolução de chamados de primeiro nível, registro do que não tinha documentação e encaminhamento do que precisava de outro time.",
+        tags: ["Atendimento N1", "Triagem de chamados", "Documentação"],
       },
       {
         period: "{{PERIODO_FACULDADE}}",
