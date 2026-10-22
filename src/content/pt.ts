@@ -1,4 +1,5 @@
 import type { SiteContent } from "./types";
+import portfolioShot from "@/assets/projects/portfolio-assinatura.webp";
 
 /**
  * Conteudo em portugues.
@@ -120,7 +121,7 @@ export const pt = {
 
   projects: {
     label: "03 — Projetos",
-    title: "O que eu construí",
+    title: { sans: "O que eu", serif: "construí" },
     intro:
       "Por enquanto, um só — mas construído do zero, com as decisões técnicas documentadas em vez de escondidas. Os próximos vêm aqui conforme eu terminar.",
     items: [
@@ -131,6 +132,12 @@ export const pt = {
           "Landing page de página única com smooth scroll, animação disparada por scroll e tipografia display. A decisão técnica mais interessante foi fazer o Lenis e o ScrollTrigger compartilharem um único loop de animação: cada um com seu próprio requestAnimationFrame é o que faz parallax tremer na maioria dos sites com scroll suave. Toda animação passa por gsap.matchMedia(), então quem pede “reduzir movimento” recebe o site sem animação nenhuma — e nenhum texto depende de JavaScript para ficar visível.",
         tags: ["React", "TypeScript", "GSAP", "Tailwind", "Vite"],
         repoUrl: "{{URL_REPO_PORTFOLIO}}",
+        image: {
+          src: portfolioShot,
+          alt: "Print deste site no fim da transição do hero: o cartão escurecido com “Developer in the making” e a rubrica do Júlio desenhada em lime por cima.",
+          width: 1280,
+          height: 800,
+        },
       },
     ],
     viewRepo: "Código",

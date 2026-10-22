@@ -5,6 +5,7 @@ import { MOTION_OK, SCRUB } from "@/lib/motion";
 import { useContent, useLocale } from "@/i18n/locale-context";
 import { RevealText } from "@/components/ui/RevealText";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { ContourField } from "@/components/ui/ContourField";
 import { ProjectCard } from "./ProjectCard";
 
 /**
@@ -25,6 +26,11 @@ import { ProjectCard } from "./ProjectCard";
  * Com um unico projeto o efeito simplesmente nao acontece — nao ha card atras
  * para cobrir. Ele liga sozinho quando o Julio adicionar o segundo.
  * ---------------------------------------------------------------------------
+ *
+ * A secao e uma folha verde-musgo, o mesmo musgo do hero, para tirar a pagina
+ * do preto continuo: hero claro, musgo, preto, papel, musgo, preto. E o ritmo
+ * de fundos alternados do landonorris.com. O titulo tem duas vozes (grotesca
+ * + serifa lime), como o "HELMETS / Hall of Fame" de la.
  */
 export function Projects() {
   const { projects } = useContent();
@@ -70,31 +76,58 @@ export function Projects() {
   );
 
   return (
-    <section ref={root} id="projetos" className="container-page py-28 md:py-40">
-      <SectionLabel>{projects.label}</SectionLabel>
+    <section
+      ref={root}
+      id="projetos"
+      // `bg-moss` + cantos arredondados: uma folha, como a Trajetoria, que
+      // deixa o preto da pagina aparecer nas bordas. `isolate` mantem o
+      // `-z-10` das curvas de nivel acima do fundo da secao, e
+      // `overflow-clip` (nao `hidden`) recorta os cantos sem quebrar o
+      // sticky do ContourField nem o dos cards.
+      className="bg-moss relative isolate overflow-clip rounded-[2rem] md:rounded-[4rem]"
+    >
+      <ContourField />
 
-      <RevealText
-        key={`${locale}-proj-title`}
-        as="h2"
-        className="text-expanded text-display text-paper mt-8 max-w-3xl"
-      >
-        {projects.title}
-      </RevealText>
+      <div className="container-page py-28 md:py-40">
+        <SectionLabel>{projects.label}</SectionLabel>
 
-      <RevealText key={`${locale}-proj-intro`} className="text-lead text-paper-dim mt-6 max-w-xl">
-        {projects.intro}
-      </RevealText>
+        {/* Duas vozes num titulo so. Cada parte e um RevealText proprio,
+            porque cada uma tem fonte e cor diferentes; o <h2> em volta
+            mantem uma unica entrada na estrutura de titulos da pagina. */}
+        <h2 className="text-display mt-8 max-w-4xl">
+          <RevealText
+            key={`${locale}-proj-title-sans`}
+            as="span"
+            className="text-expanded text-paper block"
+          >
+            {projects.title.sans}
+          </RevealText>
+          <RevealText
+            key={`${locale}-proj-title-serif`}
+            as="span"
+            // 1.15em: a serifa e mais estreita e tem olho menor; no mesmo
+            // tamanho ela pareceria uma linha menor que a de cima.
+            className="text-lime block font-serif text-[1.15em] uppercase"
+          >
+            {projects.title.serif}
+          </RevealText>
+        </h2>
 
-      <ul className="mt-16 md:mt-24">
-        {projects.items.map((project, index) => (
-          <ProjectCard
-            key={`${project.name}-${index}`}
-            project={project}
-            index={index}
-            labels={{ viewRepo: projects.viewRepo, viewLive: projects.viewLive }}
-          />
-        ))}
-      </ul>
+        <RevealText key={`${locale}-proj-intro`} className="text-lead text-paper-dim mt-6 max-w-xl">
+          {projects.intro}
+        </RevealText>
+
+        <ul className="mt-16 md:mt-24">
+          {projects.items.map((project, index) => (
+            <ProjectCard
+              key={`${project.name}-${index}`}
+              project={project}
+              index={index}
+              labels={{ viewRepo: projects.viewRepo, viewLive: projects.viewLive }}
+            />
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }

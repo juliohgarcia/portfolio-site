@@ -76,7 +76,9 @@ src/
 ├── lib/email.ts          remonta o e-mail em runtime
 ├── lib/noise.ts          ruido de Perlin 2D (terreno das curvas de nivel)
 ├── lib/color.ts          le tokens de cor para os canvas (respeita theme-light)
-├── hooks/                useReducedMotion, useIsTouch, useSmoothScroll, useParallax, useIntro
+├── hooks/                useReducedMotion, useIsTouch, useSmoothScroll, useParallax, useIntro,
+│                         useTechIcons, useElementSize
+├── assets/projects/      prints REAIS dos projetos (nunca ilustracao generica)
 ├── components/layout/    SmoothScroll, Header, Brand (logo fixo), LocaleToggle, Footer
 ├── components/ui/        Preloader, Cursor, Marquee, RevealText, MagneticLink, SectionLabel,
 │                         HeroField, ContourField, Scribble, Signature, StatusCard, TechIcon

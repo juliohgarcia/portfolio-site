@@ -50,6 +50,11 @@ export type Project = {
   /** Links opcionais: o card se adapta a quantos existirem. */
   repoUrl?: string;
   liveUrl?: string;
+  /**
+   * Imagem REAL do projeto (print, nunca ilustracao generica). `src` vem de
+   * um import de src/assets, para o Vite otimizar o nome e o cache.
+   */
+  image?: { src: string; alt: string; width: number; height: number };
 };
 
 export type SkillGroup = {
@@ -121,7 +126,11 @@ export type SiteContent = {
 
   projects: {
     label: string;
-    title: string;
+    /**
+     * Titulo em duas vozes, como o "HELMETS / Hall of Fame" do Lando: a
+     * primeira parte na grotesca, a segunda na serifa lime.
+     */
+    title: { sans: string; serif: string };
     intro: string;
     items: readonly Project[];
     /** Rotulos dos links dos cards. */
