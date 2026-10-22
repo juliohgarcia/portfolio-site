@@ -3,6 +3,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { MOTION_OK } from "@/lib/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { tokenRgb } from "@/lib/color";
 
 /**
  * Campo de pontos do hero.
@@ -110,6 +111,12 @@ export function HeroField() {
         }
       };
 
+      // Cores lidas dos tokens, nao escritas aqui: o hero agora e claro
+      // (`theme-light`), entao `--color-paper` e o preto e `--color-lime` e o
+      // oliva. Lidas uma vez por build — getComputedStyle a cada quadro custa.
+      let dotRgb = "";
+      let accentRgb = "";
+
       const draw = () => {
         ctx.clearRect(0, 0, width, height);
 
@@ -147,19 +154,24 @@ export function HeroField() {
           ctx.arc(x, y, radius, 0, Math.PI * 2);
           // Mistura entre o off-white e o acento conforme a proximidade.
           ctx.fillStyle =
-            accent > 0.05 ? `rgba(224, 255, 79, ${alpha})` : `rgba(245, 242, 234, ${alpha})`;
+            accent > 0.05 ? `rgba(${accentRgb}, ${alpha})` : `rgba(${dotRgb}, ${alpha})`;
           ctx.fill();
         }
       };
 
-      build();
+      const buildAndRead = () => {
+        build();
+        dotRgb = tokenRgb(wrap, "--color-paper");
+        accentRgb = tokenRgb(wrap, "--color-lime");
+      };
+      buildAndRead();
 
       // --- MOVIMENTO REDUZIDO: desenha uma vez, resolvido, e para aqui ---
       if (prefersReduced) {
         state.resolve = 1;
         draw();
         const onResizeStatic = () => {
-          build();
+          buildAndRead();
           draw();
         };
         window.addEventListener("resize", onResizeStatic);
@@ -170,6 +182,7 @@ export function HeroField() {
 
       mm.add(MOTION_OK, () => {
         let visible = true;
+        const section = wrap.closest("section") ?? wrap;
 
         // Um unico relogio na pagina: o ticker do GSAP (ver SmoothScroll.tsx).
         const tick = () => {
@@ -182,9 +195,13 @@ export function HeroField() {
           resolve: 1,
           ease: "none",
           scrollTrigger: {
-            trigger: wrap,
+            // A secao do hero, e nao o canvas: o canvas agora vive dentro de
+            // um palco `sticky` (ver Hero.tsx), e medir um elemento sticky da
+            // posicoes que nao correspondem ao scroll. A grade se resolve na
+            // primeira tela de rolagem, antes de o cartao encolher demais.
+            trigger: section,
             start: "top top",
-            end: "bottom top",
+            end: "+=80%",
             scrub: 0.5,
           },
         });
@@ -210,12 +227,12 @@ export function HeroField() {
         window.addEventListener("pointermove", onPointerMove, { passive: true });
         document.documentElement.addEventListener("pointerleave", onPointerLeave);
 
-        const onResize = () => build();
+        const onResize = () => buildAndRead();
         window.addEventListener("resize", onResize);
 
         // Nao gasta quadro desenhando o que ninguem ve.
         const visibility = ScrollTrigger.create({
-          trigger: wrap,
+          trigger: section,
           start: "top bottom",
           end: "bottom top",
           onToggle: (self) => {

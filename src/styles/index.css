@@ -79,6 +79,10 @@
      `lime` vira oliva para texto passar no contraste, e o rabisco decorativo
      precisa continuar no lime de verdade. */
   --color-brush: #e0ff4f;
+  /* Verde-musgo escuro: o fundo que aparece quando o hero encolhe em cartao.
+     Puxa o lime para o escuro sem virar uma segunda cor de destaque. Medido:
+     paper sobre moss 14.67:1, lime sobre moss 14.53:1. */
+  --color-moss: #1c2117;
 
   /* --- Tipografia -------------------------------------------------------- */
   --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
@@ -278,6 +282,18 @@
    precisar saber a cor da secao. */
 @utility fade-y {
   mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+}
+
+/* Folga da mascara de linha do RevealText (classe aplicada pelo SplitText).
+
+   A mascara tem `overflow: hidden` para a linha surgir "de tras" da anterior.
+   Com a altura de linha apertada da tipografia display (0.88), acentos e
+   cedilhas passam da caixa da linha e eram cortados: "CÓDIGO" aparecia como
+   "CODIGO" no celular. Padding e margem negativa IGUAIS aumentam a area
+   visivel da mascara sem mover nada no layout. */
+@utility reveal-line-mask {
+  padding-block: 0.14em;
+  margin-block: -0.14em;
 }
 
 /* Esconde visualmente, mas mantem acessivel a leitores de tela.

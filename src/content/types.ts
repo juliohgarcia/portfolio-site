@@ -93,6 +93,13 @@ export type SiteContent = {
     titleLines: readonly string[];
     subtitle: string;
     scrollHint: string;
+    /**
+     * As duas linhas grandes que correm por tras do hero quando ele encolhe
+     * em cartao (ver Hero.tsx). Decorativas: repetem a ideia do titulo.
+     */
+    transition: { serif: string; sans: string };
+    /** Rotulo acima da rubrica que se desenha no fim do hero. */
+    signatureLabel: string;
   };
 
   about: {

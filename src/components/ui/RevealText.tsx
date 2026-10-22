@@ -23,7 +23,7 @@ import { useIntroDone } from "@/hooks/useIntro";
  *
  * - `aria: "auto"` — coloca o texto original em `aria-label` no container e
  *   esconde os fragmentos do leitor de tela. Sem isso, o SplitText transforma
- *   "Suporte vira codigo" em dezenas de <span> e alguns leitores de tela leem
+ *   um titulo em dezenas de <span> e alguns leitores de tela leem
  *   letra por letra. Esta e a opcao que torna o efeito aceitavel.
  * - `mask: "lines"` — embrulha cada linha num container com overflow oculto,
  *   o que permite a linha surgir "de tras" da anterior em vez de so aparecer.
@@ -75,6 +75,10 @@ export function RevealText({
         const split = SplitText.create(el, {
           type: "lines",
           mask: "lines",
+          // As mascaras ganham a classe `reveal-line-mask` (o SplitText soma
+          // "-mask" ao linesClass). Ela da folga vertical a mascara — ver
+          // index.css. Sem isso, acento e cedilha do titulo eram cortados.
+          linesClass: "reveal-line",
           aria: "auto",
           autoSplit: true,
           // Devolver a animacao dentro de onSplit e o contrato do GSAP para

@@ -78,6 +78,8 @@ export function Experience() {
     <section
       ref={root}
       id="trajetoria"
+      // Zona clara para o header e o logo (ver Header.tsx).
+      data-header-light=""
       // `bg-ink` aqui E o papel: o theme-light redefiniu os tokens. Os cantos
       // arredondados deixam o fundo escuro da pagina aparecer nas bordas, o
       // que faz a secao ler como uma folha por cima do resto.

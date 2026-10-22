@@ -3,6 +3,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { MOTION_OK } from "@/lib/motion";
 import { createNoise2D } from "@/lib/noise";
+import { tokenRgb } from "@/lib/color";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /**
@@ -74,12 +75,6 @@ const DRIFT = 0.035;
 const ALPHA_LINE = 0.07;
 const ALPHA_ACCENT = 0.16;
 
-/** "#e0ff4f" -> "224, 255, 79", para montar o rgba() do canvas. */
-function hexToRgb(hex: string): string {
-  const value = hex.trim().replace("#", "");
-  return [0, 2, 4].map((offset) => parseInt(value.slice(offset, offset + 2), 16)).join(", ");
-}
-
 export function ContourField() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -127,9 +122,8 @@ export function ContourField() {
 
         // Lidos aqui, e nao a cada quadro: getComputedStyle forca o navegador
         // a recalcular estilos, caro demais para rodar 60 vezes por segundo.
-        const styles = getComputedStyle(wrap);
-        lineColor = `rgba(${hexToRgb(styles.getPropertyValue("--color-paper"))}, ${ALPHA_LINE})`;
-        accentColor = `rgba(${hexToRgb(styles.getPropertyValue("--color-lime"))}, ${ALPHA_ACCENT})`;
+        lineColor = `rgba(${tokenRgb(wrap, "--color-paper")}, ${ALPHA_LINE})`;
+        accentColor = `rgba(${tokenRgb(wrap, "--color-lime")}, ${ALPHA_ACCENT})`;
       };
 
       const sample = (time: number) => {

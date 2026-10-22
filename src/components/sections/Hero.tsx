@@ -6,6 +6,7 @@ import { useContent, useLocale } from "@/i18n/locale-context";
 import { useIntroDone } from "@/hooks/useIntro";
 import { RevealText } from "@/components/ui/RevealText";
 import { HeroField } from "@/components/ui/HeroField";
+import { Signature, SIGNATURE_STROKE } from "@/components/ui/Signature";
 
 /**
  * Hero: a tipografia display e o elemento principal da pagina.
@@ -14,12 +15,35 @@ import { HeroField } from "@/components/ui/HeroField";
  * em vez de uma frase com <br>. Motivo: em PT o titulo tem tres palavras curtas
  * e em EN tem outra divisao. Deixar a quebra no conteudo permite que cada
  * idioma escolha o proprio ritmo visual, sem CSS condicional.
+ *
+ * -------------------------------------------------------------------------
+ * A TRANSICAO (referencia: o hero do landonorris.com)
+ * -------------------------------------------------------------------------
+ * O hero nao sai rolando. Ele fica PARADO na tela por ~2 telas de scroll e,
+ * nesse tempo, se transforma:
+ *
+ *   1. o hero claro encolhe e vira um cartao, revelando o verde-musgo atras;
+ *   2. duas linhas grandes correm por tras do cartao, em sentidos opostos;
+ *   3. o cartao encolhe mais e escurece;
+ *   4. a rubrica do Julio se desenha por cima;
+ *   5. o musgo escurece ate o preto da secao seguinte, e a pagina segue.
+ *
+ * COMO O "PARADO" FUNCIONA: a <section> e alta (300vh) e o palco dentro dela
+ * e `sticky top-0 h-dvh`. O palco gruda no topo enquanto a secao passa por
+ * baixo — sao 200vh de scroll em que nada sobe, so a timeline avanca. E
+ * `position: sticky` do CSS, nao `pin` do ScrollTrigger, pelo mesmo motivo
+ * do resto do site: o pin reescreve a altura do documento e briga com a
+ * troca de idioma.
+ *
+ * Em movimento reduzido a secao volta a ter a altura de uma tela, sem a
+ * pista de 300vh (`motion-safe:`): rolar passa direto pelo hero, como antes.
+ * -------------------------------------------------------------------------
  */
 export function Hero() {
   const { hero } = useContent();
   const { locale } = useLocale();
   const introDone = useIntroDone();
-  const root = useRef<HTMLDivElement>(null);
+  const root = useRef<HTMLElement>(null);
 
   /** Entrada dos elementos secundarios, escalonada apos o titulo. */
   useGSAP(
@@ -45,43 +69,6 @@ export function Hero() {
           )
           .from(".hero-hint", { opacity: 0, duration: DURATION.base, ease: EASE.softOut }, 1.1);
 
-        // --- SAIDA AMARRADA AO SCROLL ---
-        // O hero nao apenas some: ele recua. O titulo sobe e perde escala
-        // enquanto a secao seguinte avanca por cima, o que da a leitura de
-        // camadas empilhadas em vez de blocos em sequencia.
-        //
-        // `scrub` faz o progresso seguir o scroll: parar o dedo para o
-        // movimento no meio, subir o desfaz. Sem isso seria so um fade.
-        const exit = gsap.timeline({
-          scrollTrigger: {
-            trigger: root.current,
-            start: "top top",
-            end: "bottom top",
-            scrub: SCRUB,
-          },
-        });
-
-        exit
-          .to(".hero-title", { yPercent: -18, scale: 0.92, opacity: 0.25, ease: "none" }, 0)
-          // fromTo com `immediateRender: false`, e nao `to`: estes elementos
-          // tambem tem a entrada acima, que os deixa em opacity 0 ate rodar.
-          // Um `to` grava o valor de partida no primeiro render — se isso
-          // acontecer antes da entrada terminar, a saida "lembra" opacity 0 e
-          // o elemento fica apagado para sempre. Declarar o ponto de partida
-          // remove a dependencia de ordem entre as duas animacoes.
-          .fromTo(
-            ".hero-eyebrow, .hero-subtitle",
-            { opacity: 1, y: 0 },
-            { opacity: 0, y: -30, ease: "none", immediateRender: false },
-            0,
-          )
-          .fromTo(
-            ".hero-hint",
-            { opacity: 1 },
-            { opacity: 0, ease: "none", immediateRender: false },
-            0,
-          );
-
         // Indicador de scroll em loop suave — convida a rolar sem ser um GIF.
         const hint = gsap.to(".hero-hint-line", {
           scaleY: 0.3,
@@ -95,7 +82,6 @@ export function Hero() {
         return () => {
           tl.kill();
           hint.kill();
-          exit.kill();
         };
       });
 
@@ -104,51 +90,202 @@ export function Hero() {
     { dependencies: [introDone, locale], scope: root },
   );
 
+  /** A transicao amarrada ao scroll (ver o comentario do componente). */
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+
+      mm.add(MOTION_OK, () => {
+        const strokes = gsap.utils.toArray<SVGPathElement>(".signature-stroke");
+        const lengths = strokes.map((path) => path.getTotalLength());
+
+        // Estado inicial da rubrica: invisivel pelo tracejado (o mecanismo
+        // esta explicado no Scribble.tsx). A folga de uma espessura evita o
+        // ponto que a ponta arredondada de um traco de comprimento zero deixa.
+        strokes.forEach((path, index) => {
+          const length = lengths[index]!;
+          gsap.set(path, {
+            strokeDasharray: `${length} ${length + SIGNATURE_STROKE * 2}`,
+            strokeDashoffset: length + SIGNATURE_STROKE,
+          });
+        });
+        // O CSS deixa a rubrica `invisible` ate aqui: sem JS ela ficaria por
+        // cima do titulo desde o inicio. Nao e texto, entao a regra de nunca
+        // esconder texto por CSS nao se aplica — e o tracejado acima ja a
+        // mantem apagada ate a timeline chegar nela.
+        gsap.set(".hero-signature", { visibility: "visible" });
+
+        const ink = getComputedStyle(document.documentElement).getPropertyValue("--color-ink");
+
+        // Uma timeline de duracao 1: as posicoes abaixo (0.3, 0.58...) leem
+        // como "porcentagem do scroll da pista". Mais facil de ajustar do que
+        // segundos, que aqui nao significam nada — quem manda e o scroll.
+        const tl = gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: SCRUB,
+          },
+        });
+
+        // 1. O hero vira cartao.
+        tl.fromTo(
+          ".hero-card",
+          { scale: 1, borderRadius: 0 },
+          { scale: 0.84, borderRadius: 32, duration: 0.3, ease: "power1.inOut" },
+          0,
+        )
+          // fromTo com `immediateRender: false` nos elementos que a entrada
+          // acima tambem anima: um `to` gravaria o valor de partida no
+          // primeiro render, e se isso acontecesse antes de a entrada
+          // terminar, a saida "lembraria" opacity 0 para sempre.
+          .fromTo(
+            ".hero-hint",
+            { opacity: 1 },
+            { opacity: 0, duration: 0.1, immediateRender: false },
+            0,
+          )
+
+          // 2. As linhas correm por tras do cartao a pista inteira.
+          .fromTo(".hero-line-a", { xPercent: -8 }, { xPercent: -38, duration: 1 }, 0)
+          .fromTo(".hero-line-b", { xPercent: -38 }, { xPercent: -8, duration: 1 }, 0)
+
+          // 3. O cartao encolhe mais, o texto sai e ele escurece — como a
+          // foto que fica cinza no site do Lando antes da assinatura.
+          .to(".hero-card", { scale: 0.46, duration: 0.3, ease: "power1.inOut" }, 0.3)
+          .fromTo(
+            ".hero-eyebrow, .hero-subtitle",
+            { opacity: 1 },
+            { opacity: 0, duration: 0.15, immediateRender: false },
+            0.3,
+          )
+          .to(".hero-dim", { opacity: 0.62, duration: 0.2 }, 0.42);
+
+        // 4. A rubrica, um gesto depois do outro. Cada traco dura o
+        // proporcional ao proprio comprimento: o laco grande demora mais que
+        // o risquinho, como uma mao de verdade.
+        const total = lengths.reduce((sum, length) => sum + length, 0);
+        let cursor = 0.58;
+        strokes.forEach((path, index) => {
+          const duration = (lengths[index]! / total) * 0.32;
+          tl.to(path, { strokeDashoffset: 0, duration, ease: "power1.inOut" }, cursor);
+          cursor += duration;
+        });
+
+        // 5. O musgo escurece ate o preto da secao seguinte: a passagem para
+        // o resto da pagina nao tem costura.
+        tl.to(".hero-stage", { backgroundColor: ink, duration: 0.12 }, 0.88).to(
+          ".hero-lines",
+          { opacity: 0, duration: 0.12 },
+          0.88,
+        );
+
+        return () => tl.kill();
+      });
+
+      return () => mm.revert();
+    },
+    { dependencies: [locale], scope: root },
+  );
+
+  // A frase repete para a linha nunca acabar dentro da tela enquanto corre.
+  const repeat = (text: string) => Array.from({ length: 4 }, () => text).join(" · ");
+
   return (
     <section
       ref={root}
-      // min-h-dvh e nao min-h-screen: no mobile, `100vh` ignora a barra de
-      // endereco do navegador e corta o conteudo. `dvh` acompanha a altura
-      // realmente visivel.
-      //
-      // `isolate` cria um contexto de empilhamento proprio. Sem ele, o
-      // `-z-10` do HeroField desce ate o contexto da raiz e e pintado ANTES
-      // do fundo do <body> — que e opaco (o index.html da fundo ao <html>,
-      // entao o body pinta o seu em vez de propaga-lo). O canvas era
-      // desenhado normalmente, so que escondido atras de uma camada preta.
-      className="relative isolate flex min-h-dvh flex-col justify-between pt-28 pb-10 md:pt-32"
+      // Pista de 300vh so quando ha movimento: e ela que segura o palco
+      // parado.
+      className="relative motion-safe:h-[300vh]"
     >
-      <HeroField />
+      {/* Zona em que a barra do header fica sem fundo (ver Header.tsx): os
+          200vh em que o palco esta parado e nada rola por baixo dela. Termina
+          quando o palco comeca a subir — senao o cartao passaria por baixo de
+          uma barra transparente. Em movimento reduzido o hero rola desde o
+          inicio, entao a zona nao existe. */}
+      <span
+        aria-hidden="true"
+        data-header-bare=""
+        className="pointer-events-none absolute inset-x-0 top-0 h-0 motion-safe:h-[200vh]"
+      />
 
-      <div className="container-page">
-        <p className="hero-eyebrow text-label text-paper-dim mb-8 md:mb-12">{hero.eyebrow}</p>
+      {/* Zona em que o cartao ainda cobre a faixa do logo: enquanto ela passa
+          sob o header, logo e barra ficam no tema claro. Em movimento
+          reduzido o hero nao encolhe, entao a zona e a secao toda. */}
+      <span
+        aria-hidden="true"
+        data-header-light=""
+        className="pointer-events-none absolute inset-x-0 top-0 h-full motion-safe:h-[32vh]"
+      />
 
-        <h1 className="hero-title text-expanded text-hero text-paper origin-top">
-          {hero.titleLines.map((line, index) => (
-            <RevealText
-              // A chave inclui o idioma: trocar PT/EN remonta o componente e
-              // o SplitText recorta o texto novo em vez de reaproveitar
-              // mascaras do texto antigo.
-              key={`${locale}-${line}`}
-              as="span"
-              trigger="intro"
-              delay={index * 0.08}
-              className="block"
-            >
-              {line}
-            </RevealText>
-          ))}
-        </h1>
-      </div>
+      <div className="hero-stage bg-moss sticky top-0 h-dvh overflow-clip">
+        {/* Linhas por tras do cartao. Decorativas: repetem a ideia do
+            titulo, entao ficam fora da arvore de acessibilidade. */}
+        <div
+          aria-hidden="true"
+          className="hero-lines absolute inset-0 hidden flex-col justify-center gap-2 motion-safe:flex"
+        >
+          <p className="hero-line-a text-hero text-lime font-serif whitespace-nowrap">
+            {repeat(hero.transition.serif)}
+          </p>
+          <p className="hero-line-b text-expanded text-hero text-paper whitespace-nowrap">
+            {repeat(hero.transition.sans)}
+          </p>
+        </div>
 
-      <div className="container-page flex items-end justify-between gap-8">
-        <p className="hero-subtitle text-lead text-paper-dim max-w-md">{hero.subtitle}</p>
+        <div
+          // O cartao e o hero de antes, agora claro (`theme-light`): `bg-ink`
+          // aqui e o papel, e os pontos do HeroField saem escuros sozinhos.
+          // `isolate` mantem o `-z-10` do canvas atras do texto e acima do
+          // fundo do cartao.
+          className="hero-card theme-light bg-ink absolute inset-0 isolate flex origin-center flex-col justify-between overflow-clip pt-28 pb-10 md:pt-32"
+        >
+          <HeroField />
 
-        <div className="hero-hint hidden shrink-0 items-center gap-3 md:flex">
-          <span className="text-label text-paper-dim">{hero.scrollHint}</span>
-          <span aria-hidden="true" className="bg-paper-dim/40 block h-16 w-px overflow-hidden">
-            <span className="hero-hint-line bg-lime block h-full w-px" />
-          </span>
+          <div className="container-page">
+            <p className="hero-eyebrow text-label text-paper-dim mb-8 md:mb-12">{hero.eyebrow}</p>
+
+            <h1 className="hero-title text-expanded text-hero text-paper origin-top">
+              {hero.titleLines.map((line, index) => (
+                <RevealText
+                  // A chave inclui o idioma: trocar PT/EN remonta o componente e
+                  // o SplitText recorta o texto novo em vez de reaproveitar
+                  // mascaras do texto antigo.
+                  key={`${locale}-${line}`}
+                  as="span"
+                  trigger="intro"
+                  delay={index * 0.08}
+                  className="block"
+                >
+                  {line}
+                </RevealText>
+              ))}
+            </h1>
+          </div>
+
+          <div className="container-page flex items-end justify-between gap-8">
+            <p className="hero-subtitle text-lead text-paper-dim max-w-md">{hero.subtitle}</p>
+
+            <div className="hero-hint hidden shrink-0 items-center gap-3 md:flex">
+              <span className="text-label text-paper-dim">{hero.scrollHint}</span>
+              <span aria-hidden="true" className="bg-paper-dim/40 block h-16 w-px overflow-hidden">
+                <span className="hero-hint-line bg-lime block h-full w-px" />
+              </span>
+            </div>
+          </div>
+
+          {/* Veu que escurece o cartao antes da rubrica. Comeca em 0 por CSS —
+              nao e texto, e sem JS ele simplesmente nunca aparece. */}
+          <div
+            aria-hidden="true"
+            className="hero-dim bg-moss pointer-events-none absolute inset-0 opacity-0"
+          />
+        </div>
+
+        <div className="hero-signature pointer-events-none invisible absolute inset-0 hidden items-center justify-center motion-safe:flex">
+          <Signature className="w-[min(62vw,24rem)]" />
         </div>
       </div>
     </section>

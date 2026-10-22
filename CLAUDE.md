@@ -144,9 +144,14 @@ limpo, e `split.revert()` no cleanup.
 
 **Secao clara = `theme-light`.** O utilitario em `index.css` so redefine os
 tokens de cor (e o `color` do texto). Nunca escreva cor condicional em
-componente: `bg-ink`/`text-paper` ja trocam sozinhos dentro dele. O Header
-aplica a mesma classe no logo e na barra quando uma `.theme-light` passa
-por baixo. O lime de verdade, fora do remapeamento, e `--color-brush`.
+componente: `bg-ink`/`text-paper` ja trocam sozinhos dentro dele. O lime de
+verdade, fora do remapeamento, e `--color-brush`.
+
+**Header reage a zonas marcadas por atributo, nao por classe.**
+`data-header-light` (logo e barra no tema claro) e `data-header-bare` (barra
+sem fundo) valem enquanto o elemento cobre a linha de 44px. Uma secao clara
+nova precisa do atributo, alem do `theme-light`. No hero as zonas sao
+`<span>`s invisiveis com a altura do trecho de scroll em que valem.
 
 **Canvas de fundo com `sticky` exige `overflow-clip`.** `overflow-hidden`
 transforma o ancestral em container de scroll e o sticky para de grudar na

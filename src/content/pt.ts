@@ -36,10 +36,14 @@ export const pt = {
 
   hero: {
     eyebrow: "Júlio Henrique Garcia · Erechim, RS",
-    titleLines: ["Suporte", "vira", "código"],
+    // A frase do README do GitHub do Julio, igual nos dois idiomas de
+    // proposito: quem le o site e o GitHub ve a mesma pessoa (ver CLAUDE.md).
+    titleLines: ["Developer", "in the", "making"],
     subtitle:
       "Trabalho com suporte a API e integrações na Autentique. Em paralelo, estudo Ciência da Computação e aprendo a construir o outro lado do software.",
     scrollHint: "role",
+    transition: { serif: "do suporte ao código", sans: "do chamado ao commit" },
+    signatureLabel: "assinado, Júlio",
   },
 
   about: {

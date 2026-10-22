@@ -27,13 +27,21 @@ export function Header() {
   // fundo que mantem o logo legivel em qualquer ponto da pagina.
 
   /**
-   * Header e logo trocam de tema conforme a secao que passa por baixo.
+   * Header e logo reagem ao que passa por baixo da faixa do topo.
    *
-   * Cada secao clara (`.theme-light`) ganha um ScrollTrigger cuja janela e o
-   * tempo em que ela cobre a faixa do logo — 44px, o meio do header de 88px.
-   * Enquanto estiver ativo, header e logo recebem a mesma classe
-   * `theme-light` da secao, e os tokens remapeados fazem o resto: texto
-   * preto, barra cor de papel. Nenhuma cor e escrita em JavaScript.
+   * Dois tipos de zona, marcadas no HTML por atributo:
+   *
+   * - `data-header-light`: enquanto ela cobre a linha de 44px (o meio do
+   *   header de 88px), header e logo recebem a classe `theme-light` e os
+   *   tokens remapeados fazem o resto — texto preto, barra cor de papel.
+   *   Nenhuma cor e escrita em JavaScript.
+   * - `data-header-bare`: enquanto ela esta sob o header, a barra perde o
+   *   fundo, como no landonorris.com. So vale onde nada rola por baixo dela
+   *   (o hero, que fica parado durante a transicao).
+   *
+   * Atributo e nao classe porque a zona nem sempre e a secao: no hero, o
+   * tema claro so vale enquanto o cartao ainda cobre o topo, entao a zona e
+   * um <span> invisivel com a altura desse trecho do scroll.
    *
    * Fica FORA do `gsap.matchMedia()`: nao e animacao, e estado. Em movimento
    * reduzido a troca continua necessaria — sem ela o logo sumiria sobre o
@@ -41,27 +49,56 @@ export function Header() {
    * seguranca de movimento reduzido do index.css ja cuida dela.
    */
   useGSAP(() => {
-    const targets = [root.current, brand.current].filter((el) => el !== null);
-    const active = new Set<Element>();
+    const header = root.current;
+    const targets = [header, brand.current].filter((el) => el !== null);
 
-    const triggers = gsap.utils.toArray<HTMLElement>(".theme-light").map((section) =>
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top 44px",
-        end: "bottom 44px",
-        onToggle: (self) => {
-          if (self.isActive) active.add(section);
-          else active.delete(section);
-          // Um Set e nao um booleano: com duas secoes claras encostadas, a
-          // segunda entrando antes de a primeira sair nao pode "apagar" o tema.
-          targets.forEach((el) => el.classList.toggle("theme-light", active.size > 0));
-        },
-      }),
-    );
+    // As listas existem ANTES de qualquer ScrollTrigger ser criado, e sao
+    // preenchidas depois. A ordem importa: uma zona que ja comeca ativa (o
+    // hero, no topo da pagina) dispara `onToggle` DENTRO do proprio
+    // `ScrollTrigger.create()`. Se `sync` lesse uma `const` atribuida pelo
+    // resultado do create, cairia na "temporal dead zone" do JavaScript — a
+    // variavel existe, mas ainda nao pode ser lida — e a excecao derrubava a
+    // pagina inteira.
+    const light: ScrollTrigger[] = [];
+    const bare: ScrollTrigger[] = [];
+
+    // Le o estado de TODAS as zonas a cada mudanca, em vez de somar e
+    // subtrair por evento: duas zonas encostadas (uma entrando antes de a
+    // outra sair) nao conseguem "apagar" o tema uma da outra.
+    const sync = () => {
+      const isLight = light.some((trigger) => trigger.isActive);
+      const isBare = bare.some((trigger) => trigger.isActive);
+      targets.forEach((el) => el.classList.toggle("theme-light", isLight));
+      if (header) header.toggleAttribute("data-bare", isBare);
+    };
+
+    const watch = (selector: string, into: ScrollTrigger[]) => {
+      gsap.utils.toArray<HTMLElement>(selector).forEach((element) => {
+        into.push(
+          ScrollTrigger.create({
+            trigger: element,
+            start: "top 44px",
+            end: "bottom 44px",
+            onToggle: sync,
+          }),
+        );
+      });
+    };
+
+    watch("[data-header-light]", light);
+    watch("[data-header-bare]", bare);
+
+    // O `onToggle` disparado durante o create acima ainda via a lista
+    // incompleta. Uma sincronizacao com tudo criado fecha a conta; o refresh
+    // (resize, troca de idioma) recalcula posicoes e pede outra.
+    sync();
+    ScrollTrigger.addEventListener("refresh", sync);
 
     return () => {
-      triggers.forEach((trigger) => trigger.kill());
+      ScrollTrigger.removeEventListener("refresh", sync);
+      [...light, ...bare].forEach((trigger) => trigger.kill());
       targets.forEach((el) => el.classList.remove("theme-light"));
+      header?.removeAttribute("data-bare");
     };
   });
 
@@ -114,7 +151,7 @@ export function Header() {
 
       <header
         ref={root}
-        className="bg-ink/80 fixed top-0 right-0 left-0 z-50 backdrop-blur-md transition-colors duration-500"
+        className="bg-ink/80 fixed top-0 right-0 left-0 z-50 backdrop-blur-md transition-colors duration-500 data-bare:bg-transparent data-bare:backdrop-blur-none"
       >
         <div className="container-page flex h-22 items-center justify-between">
           {/* Reserva o lugar do logo, que e fixo e fica fora do header (ver
