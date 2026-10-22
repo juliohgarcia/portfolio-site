@@ -167,10 +167,13 @@ export function Contact() {
           {/* `mt-*` maior que o normal: e o espaco em que a rubrica mora,
               entre o rotulo e o titulo. */}
           <div className="contact-title relative mt-20 md:mt-28">
-            {/* A rubrica cruza a primeira palavra PELO ALTO, como a do Lando
-                sobre o "ALWAYS" — no meio do titulo ela se misturaria com a
-                linha lime de baixo. Decorativa: o nome ja esta no logo. */}
-            <Signature className="pointer-events-none absolute -top-16 left-1/2 w-24 -translate-x-[85%] md:-top-28 md:w-40" />
+            {/* A rubrica fica POR CIMA do "VAMOS" (z-10, na frente do texto),
+                centrada no eixo do titulo — como a do Lando sobre o "ALWAYS".
+                Ela e mais alta que a linha do "VAMOS" (proporcao 360x440), entao
+                sobe ate o laco terminar na base dele: centrada na altura da
+                linha, o laco descia ate o "CONVERSAR." e virava lime sobre
+                lime. Decorativa: o nome ja esta no logo. */}
+            <Signature className="pointer-events-none absolute -top-20 left-1/2 z-10 w-24 -translate-x-1/2 md:-top-28 md:w-40" />
 
             <h2 className="text-display relative">
               <RevealText
