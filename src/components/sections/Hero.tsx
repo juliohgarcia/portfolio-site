@@ -8,6 +8,7 @@ import { RevealText } from "@/components/ui/RevealText";
 import { HeroField } from "@/components/ui/HeroField";
 import { Signature, SIGNATURE_STROKE } from "@/components/ui/Signature";
 import { StatusCard } from "@/components/ui/StatusCard";
+import { hideStrokes } from "@/lib/draw";
 
 /**
  * Hero: a tipografia display e o elemento principal da pagina.
@@ -89,18 +90,8 @@ export function Hero() {
 
       mm.add(MOTION_OK, () => {
         const strokes = gsap.utils.toArray<SVGPathElement>(".signature-stroke");
-        const lengths = strokes.map((path) => path.getTotalLength());
-
-        // Estado inicial da rubrica: invisivel pelo tracejado (o mecanismo
-        // esta explicado no Scribble.tsx). A folga de uma espessura evita o
-        // ponto que a ponta arredondada de um traco de comprimento zero deixa.
-        strokes.forEach((path, index) => {
-          const length = lengths[index]!;
-          gsap.set(path, {
-            strokeDasharray: `${length} ${length + SIGNATURE_STROKE * 2}`,
-            strokeDashoffset: length + SIGNATURE_STROKE,
-          });
-        });
+        // Estado inicial da rubrica: invisivel pelo tracejado (ver lib/draw.ts).
+        const lengths = hideStrokes(strokes, SIGNATURE_STROKE);
         // O CSS deixa a rubrica `invisible` ate aqui: sem JS ela ficaria por
         // cima do titulo desde o inicio. Nao e texto, entao a regra de nunca
         // esconder texto por CSS nao se aplica — e o tracejado acima ja a

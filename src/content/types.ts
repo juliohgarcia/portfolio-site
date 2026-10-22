@@ -147,8 +147,13 @@ export type SiteContent = {
 
   contact: {
     label: string;
-    title: string;
+    /** Duas vozes, como o titulo de Projetos: grotesca + serifa lime. */
+    title: { sans: string; serif: string };
     invitation: string;
+    /** Texto do botao lime de e-mail e rotulos das colunas do rodape. */
+    emailButton: string;
+    pagesLabel: string;
+    followLabel: string;
     email: string;
     links: readonly ContactLink[];
   };

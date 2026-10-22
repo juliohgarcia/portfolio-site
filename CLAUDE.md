@@ -76,6 +76,7 @@ src/
 ├── lib/email.ts          remonta o e-mail em runtime
 ├── lib/noise.ts          ruido de Perlin 2D (terreno das curvas de nivel)
 ├── lib/color.ts          le tokens de cor para os canvas (respeita theme-light)
+├── lib/draw.ts           hideStrokes: prepara caminhos SVG para "se desenhar"
 ├── hooks/                useReducedMotion, useIsTouch, useSmoothScroll, useParallax, useIntro,
 │                         useTechIcons, useElementSize
 ├── assets/projects/      prints REAIS dos projetos (nunca ilustracao generica)

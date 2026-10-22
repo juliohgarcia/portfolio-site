@@ -171,9 +171,12 @@ export const pt = {
 
   contact: {
     label: "05 — Contato",
-    title: "Vamos conversar",
+    title: { sans: "Vamos", serif: "conversar." },
     invitation:
       "Estou aberto a vagas de estágio e às primeiras oportunidades como desenvolvedor — e também a trocar ideia com quem está na mesma estrada. Se fizer sentido para o seu time, me escreva.",
+    emailButton: "Enviar e-mail",
+    pagesLabel: "Páginas",
+    followLabel: "Me encontre em",
     email: "julio.henriqu3@hotmail.com",
     links: [
       { label: "GitHub", handle: "@juliohgarcia", href: "https://github.com/juliohgarcia" },
