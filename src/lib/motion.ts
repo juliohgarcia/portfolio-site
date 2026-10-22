@@ -82,8 +82,11 @@ export const SCRUB = 0.6;
 
 /**
  * Janela padrao de montagem de uma secao: comeca quando o topo do elemento
- * cruza 85% da altura da viewport e termina quando chega a 55%. A animacao
+ * cruza 85% da altura da viewport e termina quando chega a 70%. A animacao
  * acontece a vista, nao antes de a pessoa chegar nela.
+ *
+ * O fim era 55%, e o texto ficava meio apagado ja no meio da tela, onde a
+ * pessoa esta lendo. Terminar em 70% completa a montagem antes do centro.
  */
 export const SCENE_START = "top 85%";
-export const SCENE_END = "top 55%";
+export const SCENE_END = "top 70%";

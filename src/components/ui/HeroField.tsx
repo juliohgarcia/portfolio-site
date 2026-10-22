@@ -119,8 +119,10 @@ export function HeroField() {
           let y = dot.gridY + dot.noiseY * (1 - state.resolve);
 
           // Opacidade cresce conforme o ponto encontra seu lugar.
-          let alpha = 0.12 + state.resolve * 0.2;
-          let radius = 1;
+          // Base calibrada para aparecer sobre o `ink` sem competir com o
+          // titulo: ~0.29 depois da intro, ~0.5 com a grade resolvida.
+          let alpha = 0.18 + state.resolve * 0.32;
+          let radius = 1.2;
           let accent = 0;
 
           // --- Influencia do cursor ---
@@ -245,10 +247,13 @@ export function HeroField() {
       className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
     >
       <canvas ref={canvasRef} />
-      {/* Desvanece o campo nas bordas, para ele nao brigar com a tipografia
-          nem cortar em linha reta no fim da secao. */}
-      <div className="from-ink via-ink/20 to-ink absolute inset-0 bg-gradient-to-b" />
-      <div className="from-ink absolute inset-0 bg-gradient-to-r to-transparent" />
+      {/* Desvanece o campo so nas BORDAS: topo (sob o header), base (para
+          nao cortar em linha reta no fim da secao) e um veu leve a esquerda,
+          atras do titulo. A primeira versao cobria a secao inteira com
+          `ink` quase opaco e apagava os pontos junto com o ruido. */}
+      <div className="from-ink absolute inset-x-0 top-0 h-1/4 bg-linear-to-b to-transparent" />
+      <div className="from-ink absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t to-transparent" />
+      <div className="from-ink/50 absolute inset-0 bg-linear-to-r via-transparent via-60% to-transparent" />
     </div>
   );
 }

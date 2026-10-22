@@ -63,8 +63,24 @@ export function Hero() {
 
         exit
           .to(".hero-title", { yPercent: -18, scale: 0.92, opacity: 0.25, ease: "none" }, 0)
-          .to(".hero-eyebrow, .hero-subtitle", { opacity: 0, y: -30, ease: "none" }, 0)
-          .to(".hero-hint", { opacity: 0, ease: "none" }, 0);
+          // fromTo com `immediateRender: false`, e nao `to`: estes elementos
+          // tambem tem a entrada acima, que os deixa em opacity 0 ate rodar.
+          // Um `to` grava o valor de partida no primeiro render — se isso
+          // acontecer antes da entrada terminar, a saida "lembra" opacity 0 e
+          // o elemento fica apagado para sempre. Declarar o ponto de partida
+          // remove a dependencia de ordem entre as duas animacoes.
+          .fromTo(
+            ".hero-eyebrow, .hero-subtitle",
+            { opacity: 1, y: 0 },
+            { opacity: 0, y: -30, ease: "none", immediateRender: false },
+            0,
+          )
+          .fromTo(
+            ".hero-hint",
+            { opacity: 1 },
+            { opacity: 0, ease: "none", immediateRender: false },
+            0,
+          );
 
         // Indicador de scroll em loop suave — convida a rolar sem ser um GIF.
         const hint = gsap.to(".hero-hint-line", {
@@ -94,7 +110,13 @@ export function Hero() {
       // min-h-dvh e nao min-h-screen: no mobile, `100vh` ignora a barra de
       // endereco do navegador e corta o conteudo. `dvh` acompanha a altura
       // realmente visivel.
-      className="relative flex min-h-dvh flex-col justify-between pt-28 pb-10 md:pt-32"
+      //
+      // `isolate` cria um contexto de empilhamento proprio. Sem ele, o
+      // `-z-10` do HeroField desce ate o contexto da raiz e e pintado ANTES
+      // do fundo do <body> — que e opaco (o index.html da fundo ao <html>,
+      // entao o body pinta o seu em vez de propaga-lo). O canvas era
+      // desenhado normalmente, so que escondido atras de uma camada preta.
+      className="relative isolate flex min-h-dvh flex-col justify-between pt-28 pb-10 md:pt-32"
     >
       <HeroField />
 

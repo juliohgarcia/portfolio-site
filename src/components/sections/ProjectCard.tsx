@@ -4,6 +4,7 @@ import { gsap } from "@/lib/gsap";
 import { DURATION, EASE, MOTION_OK_DESKTOP } from "@/lib/motion";
 import type { Project } from "@/content";
 import { isPlaceholder, resolved } from "@/content/placeholders";
+import { TechIcon } from "@/components/ui/TechIcon";
 
 type ProjectCardProps = {
   project: Project;
@@ -122,8 +123,9 @@ export function ProjectCard({ project, index, labels }: ProjectCardProps) {
               .map((tag) => (
                 <li
                   key={tag}
-                  className="border-ink-line text-paper-dim rounded-full border px-3 py-1 text-xs"
+                  className="group/tech border-ink-line text-paper-dim hover:text-paper flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors duration-200"
                 >
+                  <TechIcon label={tag} collapseMissing />
                   {tag}
                 </li>
               ))}

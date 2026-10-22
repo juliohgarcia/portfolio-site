@@ -41,6 +41,7 @@ const WANT = {
   github: "siGithub",
   wordpress: "siWordpress",
   datadog: "siDatadog",
+  vite: "siVite",
 };
 
 const entries = Object.entries(WANT).map(([key, name]) => {

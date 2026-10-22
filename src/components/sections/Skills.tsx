@@ -75,9 +75,9 @@ export function Skills() {
               {group.items.map((item) => (
                 <li
                   key={item}
-                  // `group/skill` nomeia o grupo para o icone reagir ao hover
+                  // `group/tech` nomeia o grupo para o icone reagir ao hover
                   // do item inteiro, nao so ao hover de si mesmo.
-                  className="group/skill text-paper-dim hover:text-paper flex items-center gap-3 transition-colors duration-200"
+                  className="group/tech text-paper-dim hover:text-paper flex items-center gap-3 transition-colors duration-200"
                 >
                   <TechIcon label={item} />
                   {item}
