@@ -6,7 +6,7 @@ import { createNoise2D } from "@/lib/noise";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /**
- * Curvas de nivel animadas no fundo de uma secao.
+ * Curvas de nivel animadas no fundo de um trecho da pagina.
  *
  * -------------------------------------------------------------------------
  * A IDEIA
@@ -28,13 +28,33 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
  *      escada.
  * -------------------------------------------------------------------------
  *
+ * UM MAPA SO PARA A PAGINA INTEIRA
+ * -------------------------------------------------------------------------
+ * Este componente aparece em mais de um lugar (Sobre/Trajetoria e Contato),
+ * e todas as instancias desenham o MESMO terreno: o ruido e amostrado na
+ * posicao da PAGINA, nao na posicao do canvas. E como se houvesse um unico
+ * mapa impresso atras do site e cada secao fosse uma janela para ele — o
+ * efeito do Lando, em que as linhas passam por tras das secoes.
+ *
+ * O canvas, porem, tem so o tamanho da TELA e fica `sticky`. Um canvas da
+ * altura do trecho (~3.000px) em tela retina passaria de 40 MB de memoria.
+ * Como o terreno e lido pela posicao na pagina, as linhas sobem junto com o
+ * conteudo ao rolar, mesmo com o canvas parado na tela.
+ * -------------------------------------------------------------------------
+ *
+ * AS CORES VEM DO CSS. O componente le `--color-paper` e `--color-lime` do
+ * proprio elemento. Dentro do `theme-light` esses tokens viram preto e oliva,
+ * entao a mesma instancia desenha linhas claras no escuro e escuras no claro,
+ * sem nenhuma prop de tema.
+ *
  * O movimento vem de DUAS camadas de ruido derivando em direcoes diferentes.
  * Uma camada so faria o desenho inteiro deslizar como papel de parede; duas,
  * somadas, fazem as formas mudarem de verdade.
  *
  * Mesmas regras de performance do HeroField: um unico relogio (gsap.ticker),
- * DPR limitado a 2, celulas maiores no mobile, nada desenhado fora da tela,
- * e em movimento reduzido um quadro estatico.
+ * DPR limitado a 2, celulas maiores no mobile, nada desenhado fora da tela.
+ * Em movimento reduzido o terreno fica parado e so e redesenhado no scroll,
+ * para acompanhar o conteudo.
  */
 
 /** Tamanho da celula do marching squares, em px. Maior = mais barato. */
@@ -50,6 +70,16 @@ const LEVELS = [-0.45, -0.3, -0.15, 0, 0.15, 0.3, 0.45];
 /** Velocidade da deriva, em unidades de ruido por segundo. Lento de proposito. */
 const DRIFT = 0.035;
 
+/** Opacidade das linhas comuns e da linha de destaque (nivel 0). */
+const ALPHA_LINE = 0.07;
+const ALPHA_ACCENT = 0.16;
+
+/** "#e0ff4f" -> "224, 255, 79", para montar o rgba() do canvas. */
+function hexToRgb(hex: string): string {
+  const value = hex.trim().replace("#", "");
+  return [0, 2, 4].map((offset) => parseInt(value.slice(offset, offset + 2), 16)).join(", ");
+}
+
 export function ContourField() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -64,6 +94,7 @@ export function ContourField() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
+      // Mesmas sementes em todas as instancias: e o que faz delas um mapa so.
       const noiseA = createNoise2D(7);
       const noiseB = createNoise2D(23);
 
@@ -74,10 +105,13 @@ export function ContourField() {
       let rows = 0;
       /** Valores do terreno nos pontos da grade, linha a linha. */
       let field = new Float32Array(0);
+      let lineColor = "";
+      let accentColor = "";
 
       const resize = () => {
         width = wrap.clientWidth;
-        height = wrap.clientHeight;
+        // Altura da tela, a nao ser que o trecho seja mais baixo que ela.
+        height = Math.min(window.innerHeight, wrap.clientHeight);
 
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
         canvas.width = Math.round(width * dpr);
@@ -90,14 +124,25 @@ export function ContourField() {
         cols = Math.ceil(width / cell) + 1;
         rows = Math.ceil(height / cell) + 1;
         field = new Float32Array(cols * rows);
+
+        // Lidos aqui, e nao a cada quadro: getComputedStyle forca o navegador
+        // a recalcular estilos, caro demais para rodar 60 vezes por segundo.
+        const styles = getComputedStyle(wrap);
+        lineColor = `rgba(${hexToRgb(styles.getPropertyValue("--color-paper"))}, ${ALPHA_LINE})`;
+        accentColor = `rgba(${hexToRgb(styles.getPropertyValue("--color-lime"))}, ${ALPHA_ACCENT})`;
       };
 
       const sample = (time: number) => {
         const t = time * DRIFT;
+        // Onde o canvas esta NA PAGINA neste quadro. Com o sticky, enquanto
+        // ele esta preso no topo da tela esse valor acompanha o scroll — e e
+        // isso que faz as linhas subirem junto com o conteudo.
+        const originY = canvas.getBoundingClientRect().top + window.scrollY;
+
         for (let row = 0; row < rows; row++) {
+          const y = (originY + row * cell) / SCALE;
           for (let col = 0; col < cols; col++) {
             const x = (col * cell) / SCALE;
-            const y = (row * cell) / SCALE;
             // Camada larga derivando para a direita e uma mais fina, com
             // metade do peso, indo na diagonal oposta.
             field[row * cols + col] =
@@ -183,24 +228,36 @@ export function ContourField() {
             }
           }
 
-          // Uma familia de linhas no acento, o resto em off-white quase
-          // transparente: presenca de textura, nunca de conteudo.
-          ctx.strokeStyle = level === 0 ? "rgba(224, 255, 79, 0.16)" : "rgba(245, 242, 234, 0.07)";
+          // Uma familia de linhas no acento, o resto quase transparente:
+          // presenca de textura, nunca de conteudo.
+          ctx.strokeStyle = level === 0 ? accentColor : lineColor;
           ctx.stroke();
         }
       };
 
       resize();
 
-      // --- MOVIMENTO REDUZIDO: um quadro estatico ---
+      // ResizeObserver e nao so o `resize` da janela: a altura do trecho muda
+      // sozinha quando o idioma troca e o texto quebra em outro lugar. A
+      // janela continua sendo ouvida porque a altura da TELA tambem importa.
+      const redraw = () => {
+        resize();
+        draw(prefersReduced ? 0 : gsap.ticker.time);
+      };
+      const observer = new ResizeObserver(redraw);
+      observer.observe(wrap);
+      window.addEventListener("resize", redraw);
+
+      // --- MOVIMENTO REDUZIDO: terreno parado, redesenhado so no scroll ---
       if (prefersReduced) {
+        const onScroll = () => draw(0);
         draw(0);
-        const observer = new ResizeObserver(() => {
-          resize();
-          draw(0);
-        });
-        observer.observe(wrap);
-        return () => observer.disconnect();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => {
+          observer.disconnect();
+          window.removeEventListener("resize", redraw);
+          window.removeEventListener("scroll", onScroll);
+        };
       }
 
       const mm = gsap.matchMedia();
@@ -209,20 +266,13 @@ export function ContourField() {
         let visible = false;
 
         // `gsap.ticker.time` e o relogio do GSAP em segundos — o mesmo que
-        // move o Lenis. Usar o tempo, e nao "contar quadros", deixa a deriva
-        // com a mesma velocidade em telas de 60 e de 120 Hz.
+        // move o Lenis, que roda ANTES deste callback no mesmo quadro (foi
+        // registrado primeiro). Entao o scroll ja esta atualizado quando o
+        // terreno e amostrado, e as linhas nao ficam um quadro atrasadas.
         const tick = () => {
           if (visible) draw(gsap.ticker.time);
         };
         gsap.ticker.add(tick);
-
-        // ResizeObserver e nao `resize` da janela: a altura da secao muda
-        // sozinha quando o idioma troca e o texto quebra em outro lugar.
-        const observer = new ResizeObserver(() => {
-          resize();
-          draw(gsap.ticker.time);
-        });
-        observer.observe(wrap);
 
         const visibility = ScrollTrigger.create({
           trigger: wrap,
@@ -235,12 +285,15 @@ export function ContourField() {
 
         return () => {
           gsap.ticker.remove(tick);
-          observer.disconnect();
           visibility.kill();
         };
       });
 
-      return () => mm.revert();
+      return () => {
+        mm.revert();
+        observer.disconnect();
+        window.removeEventListener("resize", redraw);
+      };
     },
     { dependencies: [prefersReduced], scope: wrapRef },
   );
@@ -249,11 +302,15 @@ export function ContourField() {
     <div
       ref={wrapRef}
       aria-hidden="true"
-      // `fade-y` apaga as bordas de cima e de baixo: as linhas surgem e somem
-      // em vez de cortar reto no limite da secao.
-      className="fade-y pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+      // `overflow-clip`, NAO `overflow-hidden`: hidden transforma o elemento
+      // num container de scroll, e um `sticky` dentro dele passa a grudar
+      // nesse container (que nao rola) em vez de na tela. `clip` recorta igual
+      // sem criar container de scroll.
+      // `fade-y` apaga as bordas de cima e de baixo do trecho: as linhas
+      // surgem e somem em vez de cortar reto.
+      className="fade-y pointer-events-none absolute inset-0 -z-10 overflow-clip"
     >
-      <canvas ref={canvasRef} className="block" />
+      <canvas ref={canvasRef} className="sticky top-0 block" />
     </div>
   );
 }

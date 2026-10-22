@@ -8,6 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Preloader } from "@/components/ui/Preloader";
 import { Cursor } from "@/components/ui/Cursor";
 import { Marquee } from "@/components/ui/Marquee";
+import { ContourField } from "@/components/ui/ContourField";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
 import { IntroContext } from "@/hooks/useIntro";
@@ -72,8 +73,15 @@ function PageContent() {
     // `id` e o alvo do "pular para o conteudo" do Header.
     <main id="conteudo">
       <Hero />
-      <Marquee items={content.marquee} />
-      <About />
+      {/* Curvas de nivel por tras do carrossel e do Sobre. A Trajetoria tem
+          a propria instancia, e as duas desenham o mesmo terreno: as linhas
+          parecem continuar por baixo da borda arredondada da secao clara.
+          `isolate` mantem o `-z-10` do fundo acima do fundo do <body>. */}
+      <div className="relative isolate">
+        <ContourField />
+        <Marquee items={content.marquee} />
+        <About />
+      </div>
       <Experience />
       <Projects />
       <Skills />

@@ -61,6 +61,10 @@
   --color-paper: #f5f2ea; /* texto principal (off-white, menos agressivo que #fff) */
   --color-paper-dim: #8a8781; /* texto secundario — contraste 5.53:1 sobre --color-ink (AA) */
   --color-lime: #e0ff4f; /* acento */
+  /* Mesmo lime, mas FORA do remapeamento do `theme-light` (abaixo): la o
+     `lime` vira oliva para texto passar no contraste, e o rabisco decorativo
+     precisa continuar no lime de verdade. */
+  --color-brush: #e0ff4f;
 
   /* --- Tipografia -------------------------------------------------------- */
   --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
@@ -213,6 +217,28 @@
   font-family: var(--font-display);
   font-stretch: 112%;
   text-transform: uppercase;
+}
+
+/* Secao clara — tira o site do monocromatico sem criar uma segunda paleta.
+
+   Como funciona: as utilities do Tailwind v4 apontam para as variaveis do
+   @theme (`text-paper` vira `color: var(--color-paper)`). Variavel CSS e
+   herdada, entao redefinir os tokens AQUI vale para tudo dentro da secao:
+   `bg-ink` passa a ser o papel, `text-paper` passa a ser o preto. O
+   componente nao precisa de nenhuma classe condicional.
+
+   Contrastes medidos sobre o papel (#f5f2ea):
+     paper (#0a0a0a)      17.7:1
+     paper-dim (#5a5750)  6.44:1  AA em texto corrido
+     lime  (#4a5600)      7.16:1  oliva: o lime de verdade daria 1.0:1
+   Opacidades nao foram medidas — evite `/70` em texto pequeno aqui. */
+@utility theme-light {
+  --color-ink: #f5f2ea;
+  --color-ink-soft: #ebe7dc;
+  --color-ink-line: #d9d5ca;
+  --color-paper: #0a0a0a;
+  --color-paper-dim: #5a5750;
+  --color-lime: #4a5600;
 }
 
 /* Apaga as bordas de cima e de baixo de um fundo decorativo. `mask-image`
