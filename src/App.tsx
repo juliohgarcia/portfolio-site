@@ -24,10 +24,12 @@ import { Contact } from "@/components/sections/Contact";
 /**
  * Shell do site: decide o que montar com base nas preferencias da pessoa.
  *
- * Centralizar essas decisoes aqui tem um motivo: Preloader, Cursor e Marquee
- * nao precisam saber nada sobre acessibilidade ou tipo de dispositivo. Eles so
+ * Centralizar essas decisoes aqui tem um motivo: Preloader e Cursor nao
+ * precisam saber nada sobre acessibilidade ou tipo de dispositivo. Eles so
  * recebem a decisao de existir ou nao. Isso mantem a regra em um lugar unico,
- * em vez de repetida (e esquecida) em cada componente.
+ * em vez de repetida (e esquecida) em cada componente. O Marquee e a excecao:
+ * ele sempre monta (o texto da faixa e conteudo) e so nao anima em movimento
+ * reduzido, via matchMedia.
  */
 function Shell() {
   const prefersReduced = useReducedMotion();

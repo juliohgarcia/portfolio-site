@@ -33,7 +33,7 @@ Bilíngue **PT/EN** com toggle no header. Visual: dark monocromático + 1 acento
 | @gsap/react                         | 2.1.2     | hook `useGSAP`                                      |
 | lenis                               | 1.3.27    | smooth scroll                                       |
 | @fontsource-variable/archivo, inter | 5.3.0     | fontes auto-hospedadas                              |
-| @fontsource/instrument-serif        | 5.3.0     | so no logo (Brand.tsx); arquivo estatico de 400     |
+| @fontsource/instrument-serif        | 5.3.0     | `font-serif`: logo e titulos; estatico de 400       |
 | eslint                              | 10.13.0   | flat config                                         |
 | typescript-eslint                   | 8.72.0    |                                                     |
 
@@ -54,6 +54,7 @@ npm run dev        # servidor de desenvolvimento
 npm run build      # tsc -b && vite build (type-check + build de producao)
 npm run preview    # serve o build — sempre confira aqui, nao so no dev
 npm run lint       # eslint; deve terminar com zero erros
+npm run lint:fix   # eslint --fix
 npm run typecheck  # so os tipos, sem build
 npm run format     # prettier --write
 ```
@@ -68,7 +69,8 @@ src/
 ├── main.tsx              entrypoint
 ├── App.tsx               Shell (decisoes de a11y/device) + composicao das secoes
 ├── styles/index.css      tokens @theme, @font-face, base, @utility
-├── content/              UNICA fonte de texto (types.ts = contrato, pt.ts, en.ts)
+├── content/              UNICA fonte de texto (types.ts = contrato, pt.ts, en.ts,
+│                         index.ts = mapa CONTENT por idioma)
 │   └── placeholders.ts   isPlaceholder/resolved — campos {{...}} nao viram link
 ├── i18n/                 LocaleProvider, locale-context (useLocale/useContent), DocumentMeta
 ├── lib/gsap.ts           UNICO registerPlugin do projeto
@@ -77,6 +79,8 @@ src/
 ├── lib/noise.ts          ruido de Perlin 2D (terreno das curvas de nivel)
 ├── lib/color.ts          le tokens de cor para os canvas (respeita theme-light)
 ├── lib/draw.ts           hideStrokes: prepara caminhos SVG para "se desenhar"
+├── lib/tech-icons.ts     findIcon: rotulo da skill -> icone (so `import type`)
+├── lib/tech-icons-data.ts  GERADO por scripts/gen-tech-icons.mjs — nao edite a mao
 ├── hooks/                useReducedMotion, useIsTouch, useSmoothScroll, useParallax, useIntro,
 │                         useTechIcons, useElementSize
 ├── assets/projects/      prints REAIS dos projetos (nunca ilustracao generica)
@@ -84,6 +88,9 @@ src/
 ├── components/ui/        Preloader, Cursor, Marquee, RevealText, MagneticLink, SectionLabel,
 │                         HeroField, ContourField, Scribble, Signature, StatusCard, TechIcon
 └── components/sections/  Hero, About, Experience, Projects, ProjectCard, Skills, Contact
+
+public/                   favicon.svg, og-image.png
+scripts/gen-tech-icons.mjs  copia so os icones usados do simple-icons (nao e dependencia)
 ```
 
 Texto do site **nunca** fica hardcoded em componente — vai para `src/content/`,
@@ -131,7 +138,8 @@ useGSAP(
 ```
 
 **Um único loop de animação.** O `raf` do Lenis é dirigido pelo `gsap.ticker`
-em `SmoothScroll.tsx`, com `lagSmoothing(0)`. Nunca crie um segundo
+em `SmoothScroll.tsx` (`autoRaf: false`); o `lagSmoothing(0)` fica em
+`src/lib/gsap.ts`. Canvas também desenham pelo ticker (ver `HeroField.tsx`). Nunca crie um segundo
 `requestAnimationFrame` — dois loops disputando o scroll é o que faz parallax
 tremer.
 
@@ -143,8 +151,10 @@ quando o espaço é reservado desde o primeiro render e a altura da página não
 muda (como os ícones em `useTechIcons`). Fase 2 (WebGL) continua candidata.
 
 **SplitText e o toggle de idioma.** Trocar PT↔EN muda o texto e invalida os spans
-do SplitText. Componentes de texto animado levam `key={locale}` para remontar
-limpo, e `split.revert()` no cleanup.
+do SplitText. O `RevealText` tem `children` nas dependências do
+`useGSAP` (re-split com o texto novo) e `split.revert()` no cleanup; quem o
+usa passa uma `key` com o locale (`key={`${locale}-about-title`}`) para
+remontar limpo.
 
 **Secao clara = `theme-light`.** O utilitario em `index.css` so redefine os
 tokens de cor (e o `color` do texto). Nunca escreva cor condicional em
@@ -159,12 +169,13 @@ nova precisa do atributo, alem do `theme-light`. No hero as zonas sao
 
 **Canvas de fundo com `sticky` exige `overflow-clip`.** `overflow-hidden`
 transforma o ancestral em container de scroll e o sticky para de grudar na
-tela (ver ContourField.tsx e Experience.tsx).
+tela (ver ContourField.tsx, Hero.tsx, Experience.tsx e Projects.tsx).
 
 ## 7. Regras obrigatórias
 
 1. **`prefers-reduced-motion` em toda animação.** Sem exceção. Em modo reduzido:
-   Lenis não é instanciado (scroll nativo), cursor custom e marquee não montam.
+   Lenis não é instanciado (scroll nativo), preloader e cursor custom não montam,
+   e o marquee fica parado (monta, mas sem tween).
 2. **Texto nunca nasce invisível.** Proibido `opacity: 0` em CSS para texto que
    depende de JS para aparecer. O estado inicial escondido é aplicado por JS,
    só quando a animação vai de fato rodar. Isso é o que mantém o site legível
@@ -172,8 +183,10 @@ tela (ver ContourField.tsx e Experience.tsx).
 3. **Mobile-first.** O estilo base é o do celular; `md:` e `lg:` só ampliam.
    Nunca `lg:`-primeiro com override para baixo. Alvos de toque ≥ 44px.
 4. **Orçamento de bundle: < 170 kB gzip de JS.** Confira no `npm run build`
-   somando os chunks. Estado atual: ~137 kB (os icones de tecnologia chegam
-   depois, em ~14 kB, e nao contam). Não há code splitting das seções — ver
+   somando os chunks. Estado atual: ~141 kB (index ~91 + gsap ~50; os
+   icones de tecnologia chegam depois, em ~14 kB, e nao contam). O chunk
+   `index` já passa dos 260 kB minificados do `chunkSizeWarningLimit`, então o
+   build mostra um aviso — é o sinal para investigar, não um erro. Não há code splitting das seções — ver
    §6.
 5. **Foco visível sempre.** Nunca `outline: none` sem substituto.
 6. **Contraste verificado, não estimado.** Valores medidos sobre `--color-ink`:
