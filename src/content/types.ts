@@ -92,7 +92,11 @@ export type SiteContent = {
     /** Cada string e uma linha da tipografia display. Mantenha-as curtas. */
     titleLines: readonly string[];
     subtitle: string;
-    scrollHint: string;
+    /**
+     * Cartao de status no canto inferior direito do hero (StatusCard.tsx),
+     * no lugar do antigo "role". `file` e o nome na aba de editor.
+     */
+    status: { label: string; file: string; headline: string; detail: string; footer: string };
     /**
      * As duas linhas grandes que correm por tras do hero quando ele encolhe
      * em cartao (ver Hero.tsx). Decorativas: repetem a ideia do titulo.

@@ -75,10 +75,11 @@ src/
 ├── lib/motion.ts         DURATION, EASE, MOTION_OK / MOTION_REDUCED / MOTION_OK_DESKTOP
 ├── lib/email.ts          remonta o e-mail em runtime
 ├── lib/noise.ts          ruido de Perlin 2D (terreno das curvas de nivel)
+├── lib/color.ts          le tokens de cor para os canvas (respeita theme-light)
 ├── hooks/                useReducedMotion, useIsTouch, useSmoothScroll, useParallax, useIntro
 ├── components/layout/    SmoothScroll, Header, Brand (logo fixo), LocaleToggle, Footer
 ├── components/ui/        Preloader, Cursor, Marquee, RevealText, MagneticLink, SectionLabel,
-│                         HeroField, ContourField, Scribble, TechIcon
+│                         HeroField, ContourField, Scribble, Signature, StatusCard, TechIcon
 └── components/sections/  Hero, About, Experience, Projects, ProjectCard, Skills, Contact
 ```
 

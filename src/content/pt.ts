@@ -41,7 +41,15 @@ export const pt = {
     titleLines: ["Developer", "in the", "making"],
     subtitle:
       "Trabalho com suporte a API e integrações na Autentique. Em paralelo, estudo Ciência da Computação e aprendo a construir o outro lado do software.",
-    scrollHint: "role",
+    // Dados reais: Ciencia da Computacao na URI (em andamento) e o inicio dos
+    // estudos (fev/2025). Ver "Dados reais no conteudo" no CLAUDE.md.
+    status: {
+      label: "Status atual",
+      file: "status.ts",
+      headline: "Ciência da Computação",
+      detail: "URI",
+      footer: "Em transição desde 2025",
+    },
     transition: { serif: "do suporte ao código", sans: "do chamado ao commit" },
     signatureLabel: "assinado, Júlio",
   },

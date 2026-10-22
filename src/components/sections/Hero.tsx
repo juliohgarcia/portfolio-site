@@ -7,6 +7,7 @@ import { useIntroDone } from "@/hooks/useIntro";
 import { RevealText } from "@/components/ui/RevealText";
 import { HeroField } from "@/components/ui/HeroField";
 import { Signature, SIGNATURE_STROKE } from "@/components/ui/Signature";
+import { StatusCard } from "@/components/ui/StatusCard";
 
 /**
  * Hero: a tipografia display e o elemento principal da pagina.
@@ -67,22 +68,13 @@ export function Hero() {
             { opacity: 0, y: 24, duration: DURATION.base, ease: EASE.expoOut },
             0.9,
           )
-          .from(".hero-hint", { opacity: 0, duration: DURATION.base, ease: EASE.softOut }, 1.1);
+          .from(
+            ".status-card",
+            { opacity: 0, y: 24, duration: DURATION.base, ease: EASE.expoOut },
+            1.1,
+          );
 
-        // Indicador de scroll em loop suave — convida a rolar sem ser um GIF.
-        const hint = gsap.to(".hero-hint-line", {
-          scaleY: 0.3,
-          transformOrigin: "top center",
-          duration: 1.2,
-          ease: EASE.quartInOut,
-          repeat: -1,
-          yoyo: true,
-        });
-
-        return () => {
-          tl.kill();
-          hint.kill();
-        };
+        return () => tl.kill();
       });
 
       return () => mm.revert();
@@ -138,13 +130,28 @@ export function Hero() {
           0,
         )
           // fromTo com `immediateRender: false` nos elementos que a entrada
-          // acima tambem anima: um `to` gravaria o valor de partida no
-          // primeiro render, e se isso acontecesse antes de a entrada
-          // terminar, a saida "lembraria" opacity 0 para sempre.
+          // tambem anima: um `to` gravaria o valor de partida no primeiro
+          // render, e se isso acontecesse antes de a entrada terminar, a
+          // saida "lembraria" opacity 0 para sempre.
+          // O cartao de status se desfaz de baixo para cima, com o corte em
+          // DIAGONAL. O clip-path e um poligono de 4 pontos; os dois de baixo
+          // sobem juntos, mas o da direita sempre 40% acima do da esquerda —
+          // e essa diferenca constante que inclina a linha de corte. Comeca
+          // com os dois abaixo da caixa (140% e 100%: tudo visivel) e termina
+          // com os dois acima (0% e -40%: nada visivel). O GSAP interpola os
+          // numeros dentro da string, desde que os dois poligonos tenham o
+          // mesmo numero de pontos.
+          // Sai antes de o cartao grande encolher muito, para os dois nao
+          // competirem. `immediateRender: false` pelo mesmo motivo acima: a
+          // entrada tambem anima este elemento.
           .fromTo(
-            ".hero-hint",
-            { opacity: 1 },
-            { opacity: 0, duration: 0.1, immediateRender: false },
+            ".status-card",
+            { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 140%)" },
+            {
+              clipPath: "polygon(0% 0%, 100% 0%, 100% -40%, 0% 0%)",
+              duration: 0.14,
+              immediateRender: false,
+            },
             0,
           )
 
@@ -265,15 +272,17 @@ export function Hero() {
             </h1>
           </div>
 
-          <div className="container-page flex items-end justify-between gap-8">
+          <div className="container-page">
             <p className="hero-subtitle text-lead text-paper-dim max-w-md">{hero.subtitle}</p>
+          </div>
 
-            <div className="hero-hint hidden shrink-0 items-center gap-3 md:flex">
-              <span className="text-label text-paper-dim">{hero.scrollHint}</span>
-              <span aria-hidden="true" className="bg-paper-dim/40 block h-16 w-px overflow-hidden">
-                <span className="hero-hint-line bg-lime block h-full w-px" />
-              </span>
-            </div>
+          {/* O cartao fica FORA do fluxo, preso no canto: com 272px ele e mais
+              alto que a linha do subtitulo, e no fluxo empurrava o conteudo
+              do hero para fora da tela. So a partir do tablet e so em telas
+              com altura para ele: no celular o hero ja e cheio, e numa tela
+              baixa o cartao encostaria no titulo. */}
+          <div className="container-page pointer-events-none absolute inset-x-0 bottom-10 hidden justify-end md:flex [@media(max-height:44rem)]:hidden">
+            <StatusCard className="pointer-events-auto" />
           </div>
 
           {/* Veu que escurece o cartao antes da rubrica. Comeca em 0 por CSS —
