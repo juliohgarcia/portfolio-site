@@ -27,8 +27,11 @@ export const pt = {
     ],
     openMenu: "Abrir menu",
     closeMenu: "Fechar menu",
+    menuButton: "menu",
+    closeButton: "fechar",
     mainNavLabel: "Navegação principal",
     skipToContent: "Pular para o conteúdo",
+    brand: { firstName: "Júlio", lastName: "Garcia", backToTop: "Voltar ao topo" },
   },
 
   hero: {

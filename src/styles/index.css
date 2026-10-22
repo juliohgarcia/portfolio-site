@@ -39,6 +39,20 @@
     U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* Serifa do logo. Uma fonte so com um peso e sem eixo variavel — e usada em
+   uma palavra, entao baixar o arquivo estatico de 400 e o mais barato. */
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2")
+    format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* ============================================================================
    TOKENS DE DESIGN
    ----------------------------------------------------------------------------
@@ -69,6 +83,9 @@
   /* --- Tipografia -------------------------------------------------------- */
   --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* So no logo. O contraste serifa fina + grotesca pesada e o do logo do
+     landonorris.com: duas vozes no mesmo nome. */
+  --font-serif: "Instrument Serif", Georgia, serif;
 
   /* Escala fluida: o clamp() interpola entre 375px e 1440px de viewport,
      entao nao precisamos de breakpoint para tamanho de fonte.
@@ -87,6 +104,14 @@
 
   --text-lead: clamp(1.0625rem, 2vw, 1.375rem);
   --text-lead--line-height: 1.55;
+
+  /* Logo (Brand.tsx): as duas linhas tem tamanhos diferentes porque a serifa
+     e mais estreita — com o mesmo tamanho, "JULIO" ficaria menor que "GARCIA". */
+  --text-brand-serif: clamp(1.4rem, 1.1rem + 0.8vw, 1.9rem);
+  --text-brand-serif--line-height: 0.8;
+  --text-brand-sans: clamp(1.05rem, 0.85rem + 0.55vw, 1.4rem);
+  --text-brand-sans--line-height: 0.95;
+  --text-brand-sans--letter-spacing: -0.02em;
 
   --text-label: 0.6875rem;
   --text-label--line-height: 1.2;
@@ -239,6 +264,13 @@
   --color-paper: #0a0a0a;
   --color-paper-dim: #5a5750;
   --color-lime: #4a5600;
+
+  /* Redeclarar a cor do texto e obrigatorio. O <body> usa
+     `color: var(--color-paper)`, mas o navegador resolve isso UMA vez, no
+     body, e os filhos herdam o valor ja calculado (o off-white), nao a
+     variavel. Sem esta linha, todo elemento sem classe de cor propria — o
+     botao "menu" do header, por exemplo — continuaria claro sobre o papel. */
+  color: var(--color-paper);
 }
 
 /* Apaga as bordas de cima e de baixo de um fundo decorativo. `mask-image`

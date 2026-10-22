@@ -33,6 +33,7 @@ Bilíngue **PT/EN** com toggle no header. Visual: dark monocromático + 1 acento
 | @gsap/react                         | 2.1.2     | hook `useGSAP`                                      |
 | lenis                               | 1.3.27    | smooth scroll                                       |
 | @fontsource-variable/archivo, inter | 5.3.0     | fontes auto-hospedadas                              |
+| @fontsource/instrument-serif        | 5.3.0     | so no logo (Brand.tsx); arquivo estatico de 400     |
 | eslint                              | 10.13.0   | flat config                                         |
 | typescript-eslint                   | 8.72.0    |                                                     |
 
@@ -73,9 +74,11 @@ src/
 ├── lib/gsap.ts           UNICO registerPlugin do projeto
 ├── lib/motion.ts         DURATION, EASE, MOTION_OK / MOTION_REDUCED / MOTION_OK_DESKTOP
 ├── lib/email.ts          remonta o e-mail em runtime
+├── lib/noise.ts          ruido de Perlin 2D (terreno das curvas de nivel)
 ├── hooks/                useReducedMotion, useIsTouch, useSmoothScroll, useParallax, useIntro
-├── components/layout/    SmoothScroll, Header, LocaleToggle, Footer, LazySection
-├── components/ui/        Preloader, Cursor, Marquee, RevealText, MagneticLink, SectionLabel
+├── components/layout/    SmoothScroll, Header, Brand (logo fixo), LocaleToggle, Footer
+├── components/ui/        Preloader, Cursor, Marquee, RevealText, MagneticLink, SectionLabel,
+│                         HeroField, ContourField, Scribble, TechIcon
 └── components/sections/  Hero, About, Experience, Projects, ProjectCard, Skills, Contact
 ```
 
@@ -128,14 +131,26 @@ em `SmoothScroll.tsx`, com `lagSmoothing(0)`. Nunca crie um segundo
 `requestAnimationFrame` — dois loops disputando o scroll é o que faz parallax
 tremer.
 
-**Code splitting mexe com ScrollTrigger.** Toda seção lazy entra por
-`LazySection`, que reserva altura e chama `ScrollTrigger.refresh()` quando o
-chunk monta. Sem isso os triggers das seções acima mantêm as medidas da altura
-antiga e disparam no lugar errado — invisível em dev, óbvio em 3G.
+**Seções NÃO entram por `React.lazy`.** Já entraram (via um `LazySection`) e
+foi removido no commit f37be26: os chunks tinham ~1 kB cada — o peso real é
+React + GSAP — e a altura do documento mudando depois da primeira pintura é
+exatamente o que quebra `sticky` e `scrub`. Carregar sob demanda só vale
+quando o espaço é reservado desde o primeiro render e a altura da página não
+muda (como os ícones em `useTechIcons`). Fase 2 (WebGL) continua candidata.
 
 **SplitText e o toggle de idioma.** Trocar PT↔EN muda o texto e invalida os spans
 do SplitText. Componentes de texto animado levam `key={locale}` para remontar
 limpo, e `split.revert()` no cleanup.
+
+**Secao clara = `theme-light`.** O utilitario em `index.css` so redefine os
+tokens de cor (e o `color` do texto). Nunca escreva cor condicional em
+componente: `bg-ink`/`text-paper` ja trocam sozinhos dentro dele. O Header
+aplica a mesma classe no logo e na barra quando uma `.theme-light` passa
+por baixo. O lime de verdade, fora do remapeamento, e `--color-brush`.
+
+**Canvas de fundo com `sticky` exige `overflow-clip`.** `overflow-hidden`
+transforma o ancestral em container de scroll e o sticky para de grudar na
+tela (ver ContourField.tsx e Experience.tsx).
 
 ## 7. Regras obrigatórias
 
@@ -148,8 +163,9 @@ limpo, e `split.revert()` no cleanup.
 3. **Mobile-first.** O estilo base é o do celular; `md:` e `lg:` só ampliam.
    Nunca `lg:`-primeiro com override para baixo. Alvos de toque ≥ 44px.
 4. **Orçamento de bundle: < 170 kB gzip de JS.** Confira no `npm run build`
-   somando os chunks. Estado atual: ~135 kB. Seções abaixo da dobra entram
-   por `React.lazy` via `LazySection`.
+   somando os chunks. Estado atual: ~137 kB (os icones de tecnologia chegam
+   depois, em ~14 kB, e nao contam). Não há code splitting das seções — ver
+   §6.
 5. **Foco visível sempre.** Nunca `outline: none` sem substituto.
 6. **Contraste verificado, não estimado.** Valores medidos sobre `--color-ink`:
    `paper` 17.7:1 · `lime` 17.5:1 · `paper-dim` 5.53:1 — todos passam AA.

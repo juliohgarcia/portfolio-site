@@ -25,8 +25,11 @@ export const en = {
     ],
     openMenu: "Open menu",
     closeMenu: "Close menu",
+    menuButton: "menu",
+    closeButton: "close",
     mainNavLabel: "Main navigation",
     skipToContent: "Skip to content",
+    brand: { firstName: "Júlio", lastName: "Garcia", backToTop: "Back to top" },
   },
 
   hero: {

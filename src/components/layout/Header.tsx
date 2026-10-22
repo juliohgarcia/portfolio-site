@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
-import { DURATION, EASE, MOTION_OK } from "@/lib/motion";
 import { useContent } from "@/i18n/locale-context";
 import { useSmoothScroll } from "@/hooks/useSmoothScroll";
 import { LocaleToggle } from "./LocaleToggle";
+import { Brand } from "./Brand";
 
 /** Altura do header; usada como deslocamento para o titulo da secao nao ficar coberto. */
 const HEADER_OFFSET = -88;
@@ -13,6 +13,7 @@ export function Header() {
   const { nav } = useContent();
   const { scrollTo, lenisRef } = useSmoothScroll();
   const root = useRef<HTMLElement>(null);
+  const brand = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Guarda quem abriu o menu, para devolver o foco ao fechar — sem isso quem
@@ -20,35 +21,49 @@ export function Header() {
   const openButton = useRef<HTMLButtonElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
 
-  /** Esconde o header ao rolar para baixo, revela ao rolar para cima. */
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
+  // O header NAO se esconde mais ao rolar. Ele fazia isso ate o logo virar
+  // fixo (Brand.tsx): sem a barra por tras, o logo flutuava sobre o
+  // conteudo e colidia com titulos da mesma cor. A barra translucida e o
+  // fundo que mantem o logo legivel em qualquer ponto da pagina.
 
-      mm.add(MOTION_OK, () => {
-        const trigger = ScrollTrigger.create({
-          start: "top -120",
-          end: "max",
-          onUpdate: (self) => {
-            // Nunca esconde com o menu aberto: o botao de fechar iria embora.
-            if (menuOpen) return;
-            gsap.to(root.current, {
-              yPercent: self.direction === 1 ? -100 : 0,
-              duration: DURATION.fast,
-              ease: EASE.expoOut,
-            });
-          },
-          // Acima do topo o header esta sempre visivel.
-          onLeaveBack: () => gsap.to(root.current, { yPercent: 0, duration: DURATION.fast }),
-        });
+  /**
+   * Header e logo trocam de tema conforme a secao que passa por baixo.
+   *
+   * Cada secao clara (`.theme-light`) ganha um ScrollTrigger cuja janela e o
+   * tempo em que ela cobre a faixa do logo — 44px, o meio do header de 88px.
+   * Enquanto estiver ativo, header e logo recebem a mesma classe
+   * `theme-light` da secao, e os tokens remapeados fazem o resto: texto
+   * preto, barra cor de papel. Nenhuma cor e escrita em JavaScript.
+   *
+   * Fica FORA do `gsap.matchMedia()`: nao e animacao, e estado. Em movimento
+   * reduzido a troca continua necessaria — sem ela o logo sumiria sobre o
+   * papel. O que suaviza a troca e `transition-colors` no CSS, e a rede de
+   * seguranca de movimento reduzido do index.css ja cuida dela.
+   */
+  useGSAP(() => {
+    const targets = [root.current, brand.current].filter((el) => el !== null);
+    const active = new Set<Element>();
 
-        return () => trigger.kill();
-      });
+    const triggers = gsap.utils.toArray<HTMLElement>(".theme-light").map((section) =>
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top 44px",
+        end: "bottom 44px",
+        onToggle: (self) => {
+          if (self.isActive) active.add(section);
+          else active.delete(section);
+          // Um Set e nao um booleano: com duas secoes claras encostadas, a
+          // segunda entrando antes de a primeira sair nao pode "apagar" o tema.
+          targets.forEach((el) => el.classList.toggle("theme-light", active.size > 0));
+        },
+      }),
+    );
 
-      return () => mm.revert();
-    },
-    { dependencies: [menuOpen], scope: root },
-  );
+    return () => {
+      triggers.forEach((trigger) => trigger.kill());
+      targets.forEach((el) => el.classList.remove("theme-light"));
+    };
+  });
 
   /** Trava o scroll e gerencia foco e Escape enquanto o menu esta aberto. */
   useEffect(() => {
@@ -95,16 +110,16 @@ export function Header() {
         {nav.skipToContent}
       </a>
 
-      <header ref={root} className="bg-ink/80 fixed top-0 right-0 left-0 z-50 backdrop-blur-md">
+      <Brand ref={brand} onClick={() => scrollTo(0)} />
+
+      <header
+        ref={root}
+        className="bg-ink/80 fixed top-0 right-0 left-0 z-50 backdrop-blur-md transition-colors duration-500"
+      >
         <div className="container-page flex h-22 items-center justify-between">
-          <button
-            type="button"
-            onClick={() => scrollTo(0)}
-            className="text-expanded text-sm tracking-widest"
-            data-cursor="topo"
-          >
-            JG
-          </button>
+          {/* Reserva o lugar do logo, que e fixo e fica fora do header (ver
+              Brand.tsx). Sem isso o menu deslizaria para a esquerda. */}
+          <span aria-hidden="true" className="w-28 md:w-40" />
 
           {/* Navegacao desktop */}
           <nav aria-label={nav.mainNavLabel} className="hidden md:block">
@@ -133,7 +148,7 @@ export function Header() {
               aria-label={nav.openMenu}
               className="text-label flex min-h-11 items-center md:hidden"
             >
-              menu
+              {nav.menuButton}
             </button>
           </div>
         </div>
@@ -155,7 +170,7 @@ export function Header() {
               aria-label={nav.closeMenu}
               className="text-label flex min-h-11 items-center"
             >
-              fechar
+              {nav.closeButton}
             </button>
           </div>
           <nav aria-label={nav.mainNavLabel} className="container-page flex flex-1 items-center">

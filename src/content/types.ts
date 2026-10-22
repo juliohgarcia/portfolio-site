@@ -76,10 +76,15 @@ export type SiteContent = {
     /** Rotulos acessiveis do botao de menu no mobile. */
     openMenu: string;
     closeMenu: string;
+    /** Texto VISIVEL dos mesmos botoes — curto, cabe ao lado do PT/EN. */
+    menuButton: string;
+    closeButton: string;
     /** Rotulo do <nav>, lido por leitor de tela ao listar as regioes da pagina. */
     mainNavLabel: string;
     /** Primeiro link da pagina, visivel so ao receber foco por teclado. */
     skipToContent: string;
+    /** Logo fixo no canto: nome em cima, sobrenome embaixo. */
+    brand: { firstName: string; lastName: string; backToTop: string };
   };
 
   hero: {
