@@ -13,6 +13,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 import { MagneticLink } from "@/components/ui/MagneticLink";
 import { ContourField } from "@/components/ui/ContourField";
 import { Signature, SIGNATURE_STROKE } from "@/components/ui/Signature";
+import { Marquee } from "@/components/ui/Marquee";
 
 /** Mesmo deslocamento do Header: o titulo da secao nao fica sob a barra. */
 const HEADER_OFFSET = -88;
@@ -99,7 +100,7 @@ function cardShape(width: number, height: number): string {
  * pela semantica. Ele encosta neste cartao e ocupa os recortes de baixo.
  */
 export function Contact() {
-  const { contact, nav } = useContent();
+  const { contact, nav, marquee } = useContent();
   const { locale } = useLocale();
   const { scrollTo } = useSmoothScroll();
   const root = useRef<HTMLElement>(null);
@@ -142,15 +143,12 @@ export function Contact() {
     <section
       ref={root}
       id="contato"
-      // A secao E a moldura lime: uma folha com os cantos de cima
-      // arredondados subindo sobre o preto das Skills — a mesma linguagem da
-      // Trajetoria e de Projetos.
-      //
-      // Por que nao um degrade: entre preto e lime so existe oliva. Qualquer
-      // degrade entre os dois passa por uma faixa oliva turva, por mais longo
-      // ou suavizado que seja (testamos os dois). No Lando funciona porque
-      // la a secao anterior e clara: o degrade vai de papel a lime.
-      className="bg-lime relative rounded-t-[2rem] px-3 pt-16 md:rounded-t-[4rem] md:px-5 md:pt-20"
+      // A secao E a moldura, de borda a borda e com o fundo preto das Skills
+      // continuando: nao ha emenda entre as duas. Por cima, o `glow-lime`
+      // (ver index.css) faz o lime subir pelos cantos em V, como o brilho do
+      // rodape do Lando. O `pb` e a tira lime embaixo do cartao: a moldura
+      // o contorna tambem por baixo, como la.
+      className="bg-ink glow-lime relative px-3 pt-32 pb-3 md:px-5 md:pt-48 md:pb-5"
     >
       <div
         ref={card}
@@ -163,7 +161,7 @@ export function Contact() {
       >
         <ContourField />
 
-        <div className="container-page flex flex-col items-center pt-28 pb-16 text-center md:pt-36 lg:pb-28">
+        <div className="container-page flex flex-col items-center pt-28 pb-12 text-center md:pt-36 lg:pb-16">
           <SectionLabel>{contact.label}</SectionLabel>
 
           {/* `mt-*` maior que o normal: e o espaco em que a rubrica mora,
@@ -258,20 +256,45 @@ export function Contact() {
               </ul>
             </div>
 
-            {/* E-mail: o botao lime no centro, como o "BUSINESS ENQUIRIES".
-                No celular ele vem PRIMEIRO (`order-first`): e a acao principal
-                da secao, e la ela ficaria no fim de duas listas. */}
+            {/* E-mail no centro, como texto. O botao lime fica na base do
+                cartao, sobre a faixa de logos (abaixo). No celular o endereco
+                vem PRIMEIRO (`order-first`): e a acao principal da secao, e la
+                ela ficaria no fim de duas listas. */}
             {email && (
-              <div className="order-first flex flex-col items-center gap-4 md:order-2">
+              <div className="order-first md:order-2">
                 <MagneticLink
                   href={`mailto:${email}`}
                   cursorLabel="e-mail"
-                  className="bg-lime text-ink text-label inline-flex min-h-14 items-center gap-3 rounded-xl px-7 font-bold"
+                  // Fonte de texto e minusculas, nao a display expandida: um
+                  // endereco de e-mail em caixa alta larga quebrava no meio
+                  // ("...HOTMAIL.C / OM") e e mais dificil de ler e copiar.
+                  className="text-lead text-paper hover:text-lime decoration-lime/60 inline-flex min-h-11 items-center underline underline-offset-8 transition-colors"
+                >
+                  {email}
+                </MagneticLink>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Base do cartao, como a do Lando: a faixa de logos correndo de
+            borda a borda e o botao lime no meio, por cima dela. O `pb` deixa
+            a faixa acima dos recortes dos cantos, onde mora o rodape. */}
+        <div className="pb-8 lg:pb-16">
+          <div className="relative">
+            <Marquee items={marquee} className="py-6" />
+            {email && (
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <MagneticLink
+                  href={`mailto:${email}`}
+                  cursorLabel="e-mail"
+                  // O anel musgo separa o botao dos logos lime que passam por
+                  // tras dele — lime sobre lime, sem o anel, viraria uma mancha.
+                  className="bg-lime text-ink text-label ring-moss pointer-events-auto inline-flex min-h-14 items-center gap-3 rounded-xl px-7 font-bold ring-[14px]"
                 >
                   {contact.emailButton}
                   <span aria-hidden="true">↗</span>
                 </MagneticLink>
-                <p className="text-paper-dim text-sm break-all">{email}</p>
               </div>
             )}
           </div>

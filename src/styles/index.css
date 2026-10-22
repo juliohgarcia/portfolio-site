@@ -277,6 +277,30 @@
   color: var(--color-paper);
 }
 
+/* Brilho da moldura do Contato: o "V" do rodape do landonorris.com.
+
+   Um degrade RADIAL com o centro no meio do topo, de TRANSPARENTE a lime,
+   por cima do fundo preto da secao. O centro continua preto — sem emenda
+   com as Skills, que tambem sao pretas — e o lime sobe pelos cantos como um
+   brilho. A elipse tem 75% da largura e altura FIXA (22rem): proporcional a
+   secao (~1.200px), o lime so chegaria la embaixo, onde o cartao ja cobre.
+   Dali para baixo e lime cheio, que e o fundo do texto nos recortes.
+
+   A PRIMEIRA camada (a de cima) e um linear do preto ao transparente nos
+   primeiros 8rem. Sem ela, os cantos de cima ja comecam meio lime e a
+   borda da secao vira uma linha reta visivel contra as Skills. Com ela, o
+   topo e preto puro e o brilho so nasce mais abaixo. */
+@utility glow-lime {
+  background-image:
+    linear-gradient(to bottom, var(--color-ink), transparent 8rem),
+    radial-gradient(
+      75% 22rem at 50% 0%,
+      transparent 30%,
+      color-mix(in oklab, var(--color-lime) 45%, transparent) 65%,
+      var(--color-lime) 100%
+    );
+}
+
 /* Apaga as bordas de cima e de baixo de um fundo decorativo. `mask-image`
    e nao um degrade por cima: a mascara funciona sobre qualquer fundo, sem
    precisar saber a cor da secao. */

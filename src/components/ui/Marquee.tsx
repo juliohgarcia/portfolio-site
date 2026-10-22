@@ -29,7 +29,15 @@ import { useTechIcons } from "@/hooks/useTechIcons";
  *   legivel, o que tambem atende quem tem sensibilidade vestibular (texto em
  *   movimento continuo e um gatilho classico).
  */
-export function Marquee({ items }: { items: readonly string[] }) {
+export function Marquee({
+  items,
+  // A faixa abaixo do hero tem linhas em cima e embaixo; a do rodape (dentro
+  // do cartao do Contato) nao. O resto do comportamento e o mesmo.
+  className = "border-ink-line border-y py-8 md:py-10",
+}: {
+  items: readonly string[];
+  className?: string;
+}) {
   const icons = useTechIcons();
   const root = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
@@ -113,7 +121,7 @@ export function Marquee({ items }: { items: readonly string[] }) {
   return (
     <div
       ref={root}
-      className="border-ink-line overflow-hidden border-y py-8 md:py-10"
+      className={`overflow-hidden ${className}`}
       // A faixa e decorativa e repetida; agrupamos como <section> sem rotulo
       // seria pior para navegacao, entao fica como div simples.
     >
