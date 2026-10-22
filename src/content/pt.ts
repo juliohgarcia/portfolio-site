@@ -131,7 +131,7 @@ export const pt = {
         description:
           "Landing page de página única com smooth scroll, animação disparada por scroll e tipografia display. A decisão técnica mais interessante foi fazer o Lenis e o ScrollTrigger compartilharem um único loop de animação: cada um com seu próprio requestAnimationFrame é o que faz parallax tremer na maioria dos sites com scroll suave. Toda animação passa por gsap.matchMedia(), então quem pede “reduzir movimento” recebe o site sem animação nenhuma — e nenhum texto depende de JavaScript para ficar visível.",
         tags: ["React", "TypeScript", "GSAP", "Tailwind", "Vite"],
-        repoUrl: "{{URL_REPO_PORTFOLIO}}",
+        repoUrl: "https://github.com/juliohgarcia/portfolio-site",
         image: {
           src: portfolioShot,
           alt: "Print deste site no fim da transição do hero: o cartão escurecido com “Developer in the making” e a rubrica do Júlio desenhada em lime por cima.",

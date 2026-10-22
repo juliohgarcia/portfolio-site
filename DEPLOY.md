@@ -29,9 +29,8 @@ acha as menções em comentários, então filtre por linhas que são de fato val
 grep -rn '"{{[A-Z_0-9]*}}"' src/content/*.ts
 ```
 
-Restantes hoje: `{{PERIODO_AUTENTIQUE}}`, `{{PERIODO_FACULDADE}}`,
-`{{ANO_INICIO_ESTUDOS}}` e `{{URL_REPO_PORTFOLIO}}` (este sai sozinho quando o
-repositório for publicado no GitHub).
+Restantes hoje: nenhum. O repositório publicado é
+`github.com/juliohgarcia/portfolio-site`.
 
 Em desenvolvimento, o console do navegador já lista os campos pendentes.
 

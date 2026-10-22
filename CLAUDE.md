@@ -205,8 +205,10 @@ OneBitCode (fev—out/2025), Erechim/RS, e-mail e links.
 O LinkedIn bloqueia acesso automatizado (HTTP 999 / 301 para login) — qualquer
 dado novo de lá precisa vir do próprio Júlio, por print ou PDF.
 
-**Placeholder restante:** `{{URL_REPO_PORTFOLIO}}`, que sai sozinho quando o
-repositório for publicado. Confira com:
+**Sem placeholders restantes** (out/2026). O repositório é
+`github.com/juliohgarcia/portfolio-site` — **não** confundir com
+`juliohgarcia/juliohgarcia`, que é o README do perfil dele. Para conferir se
+algum campo novo ficou pendente:
 `grep -rn '"{{[A-Z_0-9]*}}"' src/content/*.ts`
 
 **Nunca invente dado de trajetória.** Na primeira versão eu escrevi descrições

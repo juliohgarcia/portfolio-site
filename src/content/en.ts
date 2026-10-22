@@ -129,7 +129,7 @@ export const en = {
         description:
           "Single-page landing with smooth scroll, scroll-driven animation and display typography. The most interesting decision was making Lenis and ScrollTrigger share a single animation loop: letting each keep its own requestAnimationFrame is what makes parallax jitter on most smooth-scroll sites. Every animation goes through gsap.matchMedia(), so anyone asking for reduced motion gets the site with no animation at all — and no text depends on JavaScript to be visible.",
         tags: ["React", "TypeScript", "GSAP", "Tailwind", "Vite"],
-        repoUrl: "{{URL_REPO_PORTFOLIO}}",
+        repoUrl: "https://github.com/juliohgarcia/portfolio-site",
         image: {
           src: portfolioShot,
           alt: "Screenshot of this site at the end of the hero transition: the dimmed card reading “Developer in the making” with Júlio’s signature drawn over it in lime.",
