@@ -133,6 +133,10 @@ export type SiteContent = {
     builtWith: string;
   };
 
-  /** Texto que percorre a faixa horizontal entre secoes. */
+  /**
+   * Tecnologias da faixa horizontal abaixo do hero. Cada rotulo vira o logo
+   * correspondente (busca em src/lib/tech-icons.ts) e continua sendo o nome
+   * acessivel dele.
+   */
   marquee: readonly string[];
 };

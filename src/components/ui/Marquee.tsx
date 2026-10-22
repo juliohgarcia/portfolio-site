@@ -2,9 +2,16 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { MOTION_OK } from "@/lib/motion";
+import { findIcon } from "@/lib/tech-icons";
+import { useTechIcons } from "@/hooks/useTechIcons";
 
 /**
- * Faixa de texto que percorre a tela horizontalmente, sem fim.
+ * Faixa de logos que percorre a tela horizontalmente, sem fim — a mesma
+ * ideia da faixa de parceiros do landonorris.com, aqui com a stack.
+ *
+ * Logos monocromaticos no acento, e nao nas cores de cada marca: dez cores
+ * diferentes lado a lado viram um mural de propaganda. Uma cor so faz a
+ * faixa ler como parte do site.
  *
  * Como o loop infinito funciona: renderizamos a lista DUAS vezes e animamos o
  * conjunto de `x: 0` ate `x: -50%`. Quando a primeira copia termina de sair, a
@@ -22,13 +29,8 @@ import { MOTION_OK } from "@/lib/motion";
  *   legivel, o que tambem atende quem tem sensibilidade vestibular (texto em
  *   movimento continuo e um gatilho classico).
  */
-export function Marquee({
-  items,
-  separator = "·",
-}: {
-  items: readonly string[];
-  separator?: string;
-}) {
+export function Marquee({ items }: { items: readonly string[] }) {
+  const icons = useTechIcons();
   const root = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
 
@@ -73,24 +75,45 @@ export function Marquee({
     { scope: root },
   );
 
-  // Uma copia da lista, com separadores entre os itens.
+  // A lista entra duas vezes em cada copia. Com ~10 logos, uma passada so
+  // tem uns 1.700px — menos que um monitor largo, e ai a emenda do loop
+  // apareceria como um buraco na borda direita.
+  const sequence = [...items, ...items];
+
   const copy = (hidden: boolean) => (
-    <div className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
-      {items.map((item) => (
-        <span key={item} className="flex items-center">
-          <span className="text-expanded text-title text-paper px-6">{item}</span>
-          <span className="text-lime text-title" aria-hidden="true">
-            {separator}
-          </span>
-        </span>
-      ))}
-    </div>
+    <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
+      {sequence.map((label, index) => {
+        const icon = icons ? findIcon(icons, label) : null;
+        return (
+          <li
+            key={`${label}-${index}`}
+            // Tamanho fixo desde o primeiro render: os logos chegam sob
+            // demanda (useTechIcons) e preenchem um espaco que ja existe,
+            // entao a faixa nao muda de largura nem de altura quando chegam.
+            className="text-lime mx-7 flex h-10 w-10 shrink-0 items-center justify-center md:mx-12 md:h-12 md:w-12 lg:mx-14"
+          >
+            {icon && (
+              <svg
+                viewBox="0 0 24 24"
+                className="h-full w-full"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d={icon.path} />
+              </svg>
+            )}
+            {/* O nome continua no DOM: e o que o leitor de tela anuncia. */}
+            <span className="sr-only-custom">{label}</span>
+          </li>
+        );
+      })}
+    </ul>
   );
 
   return (
     <div
       ref={root}
-      className="border-ink-line overflow-hidden border-y py-6"
+      className="border-ink-line overflow-hidden border-y py-8 md:py-10"
       // A faixa e decorativa e repetida; agrupamos como <section> sem rotulo
       // seria pior para navegacao, entao fica como div simples.
     >

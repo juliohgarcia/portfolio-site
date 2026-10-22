@@ -171,5 +171,20 @@ export const en = {
     builtWith: "Built with React, TypeScript and GSAP",
   },
 
-  marquee: ["Support → Dev", "TypeScript", "Node.js", "PostgreSQL", "Open to internships"],
+  // Rotulos das tecnologias do carrossel: viram logos (ver Marquee.tsx) e
+  // ficam como nome acessivel. So o que ja uso de verdade — o que ainda
+  // estou aprendendo aparece marcado nas Skills, e o carrossel nao tem como
+  // fazer essa distincao.
+  marquee: [
+    "JavaScript",
+    "TypeScript",
+    "Node.js",
+    "Express",
+    "PostgreSQL",
+    "PHP",
+    "MongoDB",
+    "Linux",
+    "Git",
+    "WordPress",
+  ],
 } satisfies SiteContent;

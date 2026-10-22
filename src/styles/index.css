@@ -215,6 +215,13 @@
   text-transform: uppercase;
 }
 
+/* Apaga as bordas de cima e de baixo de um fundo decorativo. `mask-image`
+   e nao um degrade por cima: a mascara funciona sobre qualquer fundo, sem
+   precisar saber a cor da secao. */
+@utility fade-y {
+  mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+}
+
 /* Esconde visualmente, mas mantem acessivel a leitores de tela.
    Usado nos rotulos dos links de contato que aparecem so como icone. */
 @utility sr-only-custom {

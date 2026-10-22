@@ -5,6 +5,7 @@ import { joinEmail, splitEmail } from "@/lib/email";
 import { RevealText } from "@/components/ui/RevealText";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { MagneticLink } from "@/components/ui/MagneticLink";
+import { ContourField } from "@/components/ui/ContourField";
 
 export function Contact() {
   const { contact } = useContent();
@@ -16,72 +17,80 @@ export function Contact() {
   const email = emailParts ? joinEmail(emailParts) : null;
 
   return (
-    <section ref={root} id="contato" className="container-page py-28 md:py-40">
-      <SectionLabel>{contact.label}</SectionLabel>
+    // A secao ocupa a largura toda para as curvas de nivel irem de borda a
+    // borda; o conteudo continua no container-page dentro dela. `isolate`
+    // cria o contexto de empilhamento que mantem o `-z-10` do fundo acima do
+    // <body> — o mesmo motivo do hero (ver Hero.tsx).
+    <section ref={root} id="contato" className="relative isolate">
+      <ContourField />
 
-      <RevealText
-        key={`${locale}-contact-title`}
-        as="h2"
-        className="text-expanded text-hero text-paper mt-8"
-      >
-        {contact.title}
-      </RevealText>
+      <div className="container-page py-28 md:py-40">
+        <SectionLabel>{contact.label}</SectionLabel>
 
-      <div className="mt-14 grid gap-14 md:grid-cols-12">
         <RevealText
-          key={`${locale}-contact-invite`}
-          className="text-lead text-paper-dim md:col-span-6"
+          key={`${locale}-contact-title`}
+          as="h2"
+          className="text-expanded text-hero text-paper mt-8"
         >
-          {contact.invitation}
+          {contact.title}
         </RevealText>
 
-        <div className="md:col-span-5 md:col-start-8">
-          {email && (
-            <MagneticLink
-              href={`mailto:${email}`}
-              className="text-expanded text-title text-paper hover:text-lime inline-block break-all transition-colors"
-              cursorLabel="e-mail"
-            >
-              {email}
-            </MagneticLink>
-          )}
+        <div className="mt-14 grid gap-14 md:grid-cols-12">
+          <RevealText
+            key={`${locale}-contact-invite`}
+            className="text-lead text-paper-dim md:col-span-6"
+          >
+            {contact.invitation}
+          </RevealText>
 
-          <ul className="mt-10 space-y-5">
-            {contact.links.map((link) => {
-              const href = resolved(link.href);
-              const handle = resolved(link.handle);
+          <div className="md:col-span-5 md:col-start-8">
+            {email && (
+              <MagneticLink
+                href={`mailto:${email}`}
+                className="text-expanded text-title text-paper hover:text-lime inline-block break-all transition-colors"
+                cursorLabel="e-mail"
+              >
+                {email}
+              </MagneticLink>
+            )}
 
-              return (
-                <li key={link.label} className="border-ink-line border-t pt-5">
-                  {href ? (
-                    <MagneticLink
-                      href={href}
-                      external
-                      cursorLabel={link.label}
-                      className="group flex min-h-11 items-baseline justify-between gap-4"
-                    >
-                      <span className="text-expanded text-paper group-hover:text-lime transition-colors">
-                        {link.label}
-                      </span>
-                      <span className="text-paper-dim text-sm">{handle ?? ""}</span>
-                    </MagneticLink>
-                  ) : (
-                    // Sem URL preenchida, mostramos o rotulo sem link —
-                    // nunca um <a> apontando para "{{GITHUB_URL}}".
-                    // Contraste cheio (5.53:1): o que diferencia do link ativo
-                    // e a ausencia de sublinhado e de hover, nao texto apagado.
-                    // text-paper-dim/70 daria 3.25:1 e reprovaria no AA em 16px.
-                    <p className="flex items-baseline justify-between gap-4">
-                      <span className="text-expanded text-paper-dim">{link.label}</span>
-                      <span aria-hidden="true" className="text-paper-dim/50 text-sm">
-                        —
-                      </span>
-                    </p>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
+            <ul className="mt-10 space-y-5">
+              {contact.links.map((link) => {
+                const href = resolved(link.href);
+                const handle = resolved(link.handle);
+
+                return (
+                  <li key={link.label} className="border-ink-line border-t pt-5">
+                    {href ? (
+                      <MagneticLink
+                        href={href}
+                        external
+                        cursorLabel={link.label}
+                        className="group flex min-h-11 items-baseline justify-between gap-4"
+                      >
+                        <span className="text-expanded text-paper group-hover:text-lime transition-colors">
+                          {link.label}
+                        </span>
+                        <span className="text-paper-dim text-sm">{handle ?? ""}</span>
+                      </MagneticLink>
+                    ) : (
+                      // Sem URL preenchida, mostramos o rotulo sem link —
+                      // nunca um <a> apontando para "{{GITHUB_URL}}".
+                      // Contraste cheio (5.53:1): o que diferencia do link ativo
+                      // e a ausencia de sublinhado e de hover, nao texto apagado.
+                      // text-paper-dim/70 daria 3.25:1 e reprovaria no AA em 16px.
+                      <p className="flex items-baseline justify-between gap-4">
+                        <span className="text-expanded text-paper-dim">{link.label}</span>
+                        <span aria-hidden="true" className="text-paper-dim/50 text-sm">
+                          —
+                        </span>
+                      </p>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       </div>
     </section>

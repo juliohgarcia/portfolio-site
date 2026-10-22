@@ -19,9 +19,10 @@ let cache: IconMap | null = null;
  * <TechIcon> reserva 16x16 desde o primeiro render e o caminho SVG apenas
  * preenche esse espaco. A altura da pagina nao muda em nenhum momento.
  *
- * Ganho: ~14 kB gzip saem do bundle inicial. Os icones vivem em Projetos e
- * Skills, bem abaixo da dobra — nao faz sentido atrasar a primeira pintura
- * por causa deles.
+ * Ganho: ~14 kB gzip saem do bundle inicial. A faixa logo abaixo do hero
+ * tambem usa os logos, mas ela fica abaixo da dobra e reserva o espaco de
+ * cada um — o chunk chega uma fracao de segundo depois da primeira pintura,
+ * antes de a pessoa rolar ate ali.
  */
 export function useTechIcons(): IconMap | null {
   const [icons, setIcons] = useState<IconMap | null>(cache);
